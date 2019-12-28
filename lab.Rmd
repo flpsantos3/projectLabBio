@@ -46,9 +46,22 @@ cancro[, .N, by="ageStart"] #Acho que se pode tirar também
 cancro[, .N, by="ageLabel"] #Também acho que se pode tirar se bem que esta pode ser util à frente
 cancro[, c("CancerSite", "Cause", "ageStart", "ageLabel"):=NULL]
 
+# Melt em que os dados de ambos os sexos ficam juntos
+cancro.j <- melt(cancro,
+            id.vars = c("Country","ageGroup"),
+            variable.name = "Year")
 
+#Soma dos cancros de raparigas em 2011 na Europa
+sum(cancro.j[Year %in% levels(cancro.j$Year)[1]]$value, na.rm = TRUE)
 
+#Melt em que os dados de ambos os sexos ficaram separados
+cancro.s <- melt(cancro,
+                 id.vars = c("Country","ageGroup"),
+                 measure=patterns("^Female","^Males"),
+                 variable.name = "Year",
+                 value.name = c("Female","Male"))
 
+levels(cancro.j$Year)[1]
 ```
 
 
