@@ -28,8 +28,14 @@ library(knitr)
 library(kableExtra)
 
 dados <- fread(here("CancerMortalityEU.csv"), header = TRUE, check.names = TRUE)
+pop <- fread(here("PopulationEU.csv"), header = TRUE, check.names = TRUE)
 
-# Colunas certas
+# Apagar as colunas desnesserárias na pop
+
+str(pop)
+pop[, c("ageStart","ageLabel","X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010"):=NULL]
+
+# Colunas certas nos dados
 names(dados)
 
 dados$CancerSite <- as.factor(dados$CancerSite) ; dados$Country <- as.factor(dados$Country) ; dados$ageGroup <- as.factor(dados$ageGroup)
@@ -46,22 +52,24 @@ cancro[, .N, by="ageStart"] #Acho que se pode tirar também
 cancro[, .N, by="ageLabel"] #Também acho que se pode tirar se bem que esta pode ser util à frente
 cancro[, c("CancerSite", "Cause", "ageStart", "ageLabel"):=NULL]
 
-# Melt em que os dados de ambos os sexos ficam juntos
-cancro.j <- melt(cancro,
-            id.vars = c("Country","ageGroup"),
-            variable.name = "Year")
 
-#Soma dos cancros de raparigas em 2011 na Europa
-sum(cancro.j[Year %in% levels(cancro.j$Year)[1]]$value, na.rm = TRUE)
+# melt dos dados do cancro
 
-#Melt em que os dados de ambos os sexos ficaram separados
-cancro.s <- melt(cancro,
-                 id.vars = c("Country","ageGroup"),
-                 measure=patterns("^Female","^Males"),
-                 variable.name = "Year",
-                 value.name = c("Female","Male"))
+cancro.new <- melt(cancro,
+                   id.vars = c("Country","ageGroup"),
+                   variable.name = "Year")
 
-levels(cancro.j$Year)[1]
+n <- length(cancro.new$Country)
+
+cancro.new[, Sex := c(rep("Females",(n/2)),rep("Males",(n/2)))]
+
+summary(cancro.new$Year)
+cancro.new$Year <- rep(c(2011,2012,2013,2014,2015,2016,2017),each=504,times=2)
+cancro.new$Year <- as.factor(cancro.new$Year)
+summary(cancro.new$Year)
+
+
+
 ```
 
 
@@ -69,8 +77,44 @@ levels(cancro.j$Year)[1]
 
 
 
+#Por enquanto esta parte não interessa
+
+```{r}
+# Melt dos dados por sexos
+cancro.f <- melt(cancro,
+                 measure = patterns("^Female"),
+                 id.vars = c("Country","ageGroup"),
+                 variable.name = "Year")
+
+cancro.f$Year <- substr(cancro.f$Year,9,nchar(as.character(cancro.f$Year[1])))
+
+cancro.m <- melt(cancro,
+                 measure = patterns("^Male"),
+                 id.vars = c("Country","ageGroup"),
+                 variable.name = "Year")
+
+cancro.m$Year <- substr(cancro.m$Year,7,nchar(as.character(cancro.m$Year[1])))
 
 
+
+cancro.m$Year <- as.factor(cancro.m$Year)
+
+cancro.m[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal")]%>%
+  ggplot(aes(ageGroup,value,group=Year,colour=Year))+
+    geom_point()+
+    geom_line()+
+    facet_wrap(~Country)
+
+
+
+
+#Soma dos cancros de raparigas em 2011 na Europa
+sum(cancro.j[Year %in% levels(cancro.j$Year)[1]]$value, na.rm = TRUE)
+
+
+
+levels(cancro.j$Year)[1]
+```
 
 
 
