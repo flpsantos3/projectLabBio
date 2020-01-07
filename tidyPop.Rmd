@@ -1,0 +1,111 @@
+---
+title: "tidyPop"
+author: "LBio - G3"
+date: "05/01/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Importing Data
+
+```{r dt, results= FALSE}
+
+library(data.table)
+popdt <- fread("PopulationEU.csv",
+               header = TRUE, check.names=TRUE)
+popdt
+```
+
+# Tidying Data
+
+## Removing ageStart and ageLabel columns
+
+```{r ageRemove, results= FALSE}
+popdt[, c("ageStart","ageLabel","X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010"):=NULL]
+popdt
+```
+
+## Renaming ageGroup column to Age
+
+```{r ageGroup, results= FALSE}
+setnames(popdt, c("ageGroup"),
+                c("Age"))
+popdt
+```
+
+## Morphing to long format
+
+```{r year, results= FALSE}
+
+popT <- melt(popdt,
+            id.vars = c("Country", "Sex", "Age"),
+            measure = patterns("^X"),
+            variable.name = "YearX",
+            value.name = c("Population"),
+            na.rm = TRUE)
+popT
+```
+
+## Year as numeric, removing YearX
+
+```{r yearNum, results= FALSE}
+
+popT[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
+                            "", YearX)))]
+setcolorder(popT, c("Country", "Sex", "Age", "Year", "Population"))
+popT[, YearX := NULL]
+popT
+```
+
+## Removing rows for total population data 
+
+```{r totRemove, results= FALSE}
+#Seeing as we are treating females and males differently, the rows regarding total population info will not be used and should be removed.
+
+popT <- popT[Sex != "Total"]
+popT
+```
+
+## Creating European Union as "Country"
+
+```{r createEU, results= FALSE}
+#EU's population is the sum of the populations for each country, by year and age group
+
+popEU <- popT[, .(Population = sum(Population)), by = .(Year, Sex, Age)]
+popEU[, Country := "European Union"]
+setcolorder(popEU, c("Country", "Sex", "Age", "Year", "Population"))
+pop <- rbind(popT, popEU)
+pop <- pop[order(Year, Country)]
+pop
+```
+
+## Creating age group category "All", combining all ages
+
+```{r allAge, results= FALSE}
+
+allAge <- pop[, .(Age = "All", Population = sum(Population)), by = .(Country, Year, Sex)]
+setcolorder(allAge, c("Country", "Sex", "Age", "Year", "Population"))
+allAge <- allAge[order(Year, Country)]
+allAge
+```
+
+## Merging pop and allAge
+```{r dtMerge, results= FALSE}
+
+pop <- rbind(pop, allAge)
+pop <- pop[order(Year, Country, Sex)]
+pop
+```
+
+## Selecting only the countries in study
+
+```{r selCtry, results= FALSE}
+
+popF <- pop[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")]
+popF <- popF[order(Year, Country)]
+popF
+```
+
