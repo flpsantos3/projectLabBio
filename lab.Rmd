@@ -45,7 +45,7 @@ setnames(cancro, "ageGroup", "Age")
 cancer.new <- melt(cancro,
                    id.vars = c("Country","Age"),
                    variable.name = "all",
-                   value.name = "Frequencie")
+                   value.name = "Deaths")
 
 cancer.new[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
                             "", all)))]
@@ -55,18 +55,18 @@ cancer.new[, Sex:=as.character(unglue_vec(all,"{x}_{y}",var="x"))]
 cancer.new[, .N, by="Year"]
 cancer.new[, .N, by="Sex"]
 cancer.new[, all:=NULL]
-setcolorder(cancer.new, c("Country","Age","Sex","Year","Frequencie"))
+setcolorder(cancer.new, c("Country","Age","Sex","Year","Deaths"))
 
 # Criação do EU
 
-cancer.EU <- cancer.new[, .(Country = "European Union", Frequencie = sum(Frequencie, na.rm = TRUE)), by = .(Year, Sex, Age)]
-setcolorder(cancer.EU, c("Country","Age","Sex","Year","Frequencie"))
+cancer.EU <- cancer.new[, .(Country = "European Union", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Year, Sex, Age)]
+setcolorder(cancer.EU, c("Country","Age","Sex","Year","Deaths"))
 cancer.liver <- rbind(cancer.new,cancer.EU)
 
 # Criação do all
 
-allAge <- cancer.liver[, .(Age = "All", Frequencie = sum(Frequencie)), by = .(Country, Year, Sex)]
-setcolorder(allAge, c("Country", "Sex", "Age", "Year", "Frequencie"))
+allAge <- cancer.liver[, .(Age = "All", Deaths = sum(Deaths)), by = .(Country, Year, Sex)]
+setcolorder(allAge, c("Country", "Sex", "Age", "Year", "Deaths"))
 cancer.liver <- rbind(cancer.liver,allAge)
 
 # Selecting the important countries
@@ -178,9 +178,15 @@ popF
 ```
 
 
+# Merging of the two data sets
+
+```{r final data set}
+data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
+data.f[, mrate := 100000*Deaths/Population]
+```
 
 
-
+#End of the Great Tyiding
 
 
 
