@@ -67,7 +67,7 @@ cancer.new[, all:=NULL]
 setcolorder(cancer.new, c("Country","Age","Sex","Year","Deaths"))
 
 # remoção de linhas com valores NA para cálculo correto do índice mortalidade
-#cancer.new <- na.omit(cancer.new)
+cancer.new <- na.omit(cancer.new)
 
 # Criação do EU
 
@@ -84,7 +84,8 @@ cancer.liver <- rbind(cancer.liver,allAge)
 # Selecting the important countries
 
 cancer.liver <- cancer.liver[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")
-                             ][order(Year, Country)]
+                             ][order(Year, Country, Sex)]
+cancer.liver
 ```
 
 
@@ -97,7 +98,7 @@ popdt <- fread("PopulationEU.csv",
                header = TRUE, check.names=TRUE)
 
 # Removing ageStart and ageLabel columns
-popdt[, c("ageStart","ageLabel","X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010"):=NULL]
+popdt[, c("ageStart","ageLabel","X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010","X2018"):=NULL]
 
 # Renaming ageGroup column to Age
 setnames(popdt, c("ageGroup"),
@@ -151,7 +152,6 @@ popF
 data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
 data.f[, mrate := round(100000*Deaths/Population,2)]
 data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Country]
-data.f <- na.omit(data.f)
 data.f
 ```
 
@@ -165,11 +165,12 @@ What are the time trends in the mortality rates between countries for all age gr
 
 ```{r Time trends for females}
 data.f[Age %in% "All"][Sex %in% "Females"] %>% 
-ggplot(aes(Year,mrate, group=Country, colour = Country))+
-    geom_point(size=2)+
-    geom_line()+
-    ggtitle("Time trends of Liver Cancer on the Female population")+
-    ylab("Mortality Rate")
+ggplot(aes(Year,mrate, group=Country, colour = Country)) +
+    geom_point(size=2) +
+    geom_line() +
+    ggtitle("Time trends of Liver Cancer on the Female population") +
+    ylab("Mortality Rate") +
+    scale_x_continuous(labels=dataF[,Year], breaks = dataF[,Year])
     
 ```
   
@@ -188,7 +189,8 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
     geom_point(size=2)+
     geom_line()+
     ggtitle("Time trends of Liver Cancer on the Male population")+
-    ylab("Mortality Rate")
+    ylab("Mortality Rate") +
+    scale_x_continuous(labels=dataF[,Year], breaks = dataF[,Year])
 ```
 
   * For males, like females, there is an increase in hepatic liver mortality rate over the years.
