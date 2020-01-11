@@ -16,7 +16,7 @@ output:
     toc_depth: '3'
 ---
 
-```{r}
+```{r dtStart, results= FALSE}
 library(here)
 library(data.table)
 library(unglue)
@@ -66,6 +66,9 @@ cancer.new[, .N, by="Sex"]
 cancer.new[, all:=NULL]
 setcolorder(cancer.new, c("Country","Age","Sex","Year","Deaths"))
 
+# remoção de linhas com valores NA para cálculo correto do índice mortalidade
+#cancer.new <- na.omit(cancer.new)
+
 # Criação do EU
 
 cancer.EU <- cancer.new[, .(Country = "European Union", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Year, Sex, Age)]
@@ -82,7 +85,6 @@ cancer.liver <- rbind(cancer.liver,allAge)
 
 cancer.liver <- cancer.liver[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")
                              ][order(Year, Country)]
-
 ```
 
 
@@ -115,8 +117,8 @@ popT[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
 setcolorder(popT, c("Country", "Sex", "Age", "Year", "Population"))
 
 # Removing rows for total population data 
-#Seeing as we are treating females and males differently, the rows regarding total population info will not be used and should be removed.
 
+#Seeing as we are treating females and males differently, the rows regarding total population info will not be used and should be removed.
 popT <- popT[Sex != "Total"]
 
 # Creating European Union as "Country"
@@ -147,12 +149,14 @@ popF
 
 ```{r final data set}
 data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
-data.f[, mrate := 100000*Deaths/Population]
+data.f[, mrate := round(100000*Deaths/Population,2)]
 data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Country]
+data.f <- na.omit(data.f)
+data.f
 ```
 
 
-#End of the Great Tyiding
+# End of the Great Tyiding
 
 # First Question 
 
@@ -161,37 +165,62 @@ What are the time trends in the mortality rates between countries for all age gr
 
 ```{r Time trends for females}
 data.f[Age %in% "All"][Sex %in% "Females"] %>% 
-  ggplot(aes(Year,mrate, group=Country, colour = Country))+
-    geom_point()+
+ggplot(aes(Year,mrate, group=Country, colour = Country))+
+    geom_point(size=2)+
     geom_line()+
     ggtitle("Time trends of Liver Cancer on the Female population")+
     ylab("Mortality Rate")
     
 ```
+  
+  * Looking at the data for hepatic cancer mortality rate for females we can note an overall increasing trend for every country, as well as for the European Union.
+  * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages, in these countries.
+   + Austria - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2017.
+    + Malta - an increase from 2011 (below 3) to 2017 (3,5), with a max in the year 2014. However, it remains one of the countries with the lowest mortality rate.
+   + Cyprus - overall increase, with mortality peaks in 2013 and 2016.
+  * For Portugal and Malta there is no data for the year 2017, which might help explain the steep decrease in mortality rate for the European Union, as there might be more countries without data for that year.
+  * Portugal, Germany and EU show an overall increase, with Portugal's mortality rate increasing the most among them (5.2 to 6).
+  * These five countries show lower mortality rates than the European Union for every year, except for Austria in 2012 (not taking 2017 into account).
 
 ```{r Time trends for males}
 data.f[Age %in% "All"][Sex %in% "Males"] %>% 
-  ggplot(aes(Year,mrate, group=Country, colour = Country))+
-    geom_point()+
+ggplot(aes(Year,mrate, group=Country, colour = Country))+
+    geom_point(size=2)+
     geom_line()+
     ggtitle("Time trends of Liver Cancer on the Male population")+
     ylab("Mortality Rate")
 ```
+
+  * For males, like females, there is an increase in hepatic liver mortality rate over the years.
+    + An exception is Germany, showing stable values for the years 2011 and 2017.
+  * Malta displays the steepest increase in 2016 (from 7 to 13.8).
+  *  Portugal displays the highest values (close to 17.5) while Cyprus has the lowest (even though the increase in mortality rate over the years is on par with Portugal).
+  * The overall values for mortality are higher than those of females.
+  * Portugal and Austria display higher values than the European Union, while the remaining countries stay below the average (aside from 2017).
 
 
 # Second question
 
 Compare the mortality rates by age groups between countries for 2017.
 
-```{r}
+```{r ageMR}
 data.f[Sex %in% "Females"] %>%
-  ggplot(aes(Year,mrate, group=Country))+
+ggplot(aes(Year,mrate, group=Country))+
     geom_line()+
     facet_wrap(~Age)
 ```
 
+# Third Question
 
+Which country changed (increase or decreased) the most in percentage terms between 2011 and 2017?
+  – Plot and tabulate the percentage change overtime by country.
+  
+  
+  
 
+# Fourth Question - Most common cancers
+
+What are the five (5) most common cancers in 2011? in 2017 for your countries?
 
 
 
