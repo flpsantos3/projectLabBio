@@ -16,15 +16,24 @@ output:
     toc_depth: '3'
 ---
 
-# Tidying Cancer Data 
-
-```{r cancerData, results= FALSE}
+```{r}
 library(here)
 library(data.table)
 library(unglue)
+library(ggplot2)
+library(magrittr)
 
-data <- fread(here("CancerMortalityEU.csv"), header = TRUE, check.names = TRUE)
+data <- fread(here("CancerMortalityEU.csv"), 
+              header = TRUE, check.names = TRUE)
+popdt <- fread("PopulationEU.csv",
+               header = TRUE, check.names=TRUE)
+```
 
+# Data Tidying 
+
+## Cancer data
+
+```{r cancerData, results= FALSE}
 # Colunas certas nos dados
 names(data)
 
@@ -65,7 +74,7 @@ cancer.liver <- rbind(cancer.new,cancer.EU)
 
 # Criação do all
 
-allAge <- cancer.liver[, .(Age = "All", Deaths = sum(Deaths)), by = .(Country, Year, Sex)]
+allAge <- cancer.liver[, .(Age = "All", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, Year, Sex)]
 setcolorder(allAge, c("Country", "Sex", "Age", "Year", "Deaths"))
 cancer.liver <- rbind(cancer.liver,allAge)
 
@@ -77,127 +86,109 @@ cancer.liver <- cancer.liver[Country %in% c("Austria", "Cyprus", "Germany", "Mal
 ```
 
 
-# Population Data
-
-## Importing data
+## Population Data
 
 ```{r dtPop, results= FALSE}
-
+# Importing data
 library(data.table)
 popdt <- fread("PopulationEU.csv",
                header = TRUE, check.names=TRUE)
-popdt
-```
 
-## Removing ageStart and ageLabel columns
-
-```{r ageRemove, results= FALSE}
+# Removing ageStart and ageLabel columns
 popdt[, c("ageStart","ageLabel","X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010"):=NULL]
-popdt
-```
 
-## Renaming ageGroup column to Age
-
-```{r ageGroup, results= FALSE}
+# Renaming ageGroup column to Age
 setnames(popdt, c("ageGroup"),
                 c("Age"))
-popdt
-```
 
-## Morphing to long format
-
-```{r year, results= FALSE}
-
+# Morphing to long format
 popT <- melt(popdt,
             id.vars = c("Country", "Sex", "Age"),
             measure = patterns("^X"),
             variable.name = "YearX",
             value.name = c("Population"),
             na.rm = TRUE)
-popT
-```
 
-## Year as numeric, removing YearX
-
-```{r yearNum, results= FALSE}
-
+# Year as numeric, removing YearX
 popT[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
-                            "", YearX)))]
+                            "", YearX)))][, YearX := NULL]
 setcolorder(popT, c("Country", "Sex", "Age", "Year", "Population"))
-popT[, YearX := NULL]
-popT
-```
 
-## Removing rows for total population data 
-
-```{r totRemove, results= FALSE}
+# Removing rows for total population data 
 #Seeing as we are treating females and males differently, the rows regarding total population info will not be used and should be removed.
 
 popT <- popT[Sex != "Total"]
-popT
-```
 
-## Creating European Union as "Country"
-
-```{r createEU, results= FALSE}
+# Creating European Union as "Country"
 #EU's population is the sum of the populations for each country, by year and age group
 
-popEU <- popT[, .(Population = sum(Population)), by = .(Year, Sex, Age)]
-popEU[, Country := "European Union"]
+popEU <- popT[, .(Population = sum(Population, na.rm = TRUE)), by = .(Year, Sex, Age)][, Country := "European Union"]
 setcolorder(popEU, c("Country", "Sex", "Age", "Year", "Population"))
 pop <- rbind(popT, popEU)
 pop <- pop[order(Year, Country)]
-pop
-```
 
-## Creating age group category "All", combining all ages
-
-```{r allAge, results= FALSE}
-
-allAge <- pop[, .(Age = "All", Population = sum(Population)), by = .(Country, Year, Sex)]
+# Creating age group category "All", combining all ages
+allAge <- pop[, .(Age = "All", Population = sum(Population, na.rm = TRUE)), by = .(Country, Year, Sex)]
 setcolorder(allAge, c("Country", "Sex", "Age", "Year", "Population"))
 allAge <- allAge[order(Year, Country)]
-allAge
-```
 
-## Merging pop and allAge
-```{r dtMerge, results= FALSE}
-
+# Merging pop and allAge
 pop <- rbind(pop, allAge)
 pop <- pop[order(Year, Country, Sex)]
-pop
-```
 
-## Selecting only the countries in study
-
-```{r selCtry, results= FALSE}
-
+# Selecting only the countries in study
 popF <- pop[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")]
 popF <- popF[order(Year, Country)]
+
 popF
 ```
 
-
-# Merging of the two data sets
+## Merging of the two data sets
 
 ```{r final data set}
 data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
 data.f[, mrate := 100000*Deaths/Population]
+data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Country]
 ```
 
 
 #End of the Great Tyiding
 
+# First Question 
+
+What are the time trends in the mortality rates between countries for all age groups (“All”) combined ?
+– How do they compare with the European Union overall?
+
+```{r Time trends for females}
+data.f[Age %in% "All"][Sex %in% "Females"] %>% 
+  ggplot(aes(Year,mrate, group=Country, colour = Country))+
+    geom_point()+
+    geom_line()+
+    ggtitle("Time trends of Liver Cancer on the Female population")+
+    ylab("Mortality Rate")
+    
+```
+
+```{r Time trends for males}
+data.f[Age %in% "All"][Sex %in% "Males"] %>% 
+  ggplot(aes(Year,mrate, group=Country, colour = Country))+
+    geom_point()+
+    geom_line()+
+    ggtitle("Time trends of Liver Cancer on the Male population")+
+    ylab("Mortality Rate")
+```
 
 
+# Second question
 
+Compare the mortality rates by age groups between countries for 2017.
 
-
-
-
-
-
-
+```{r}
+data.f[Sex %in% "Females"] %>%
+  ggplot(aes(Year,mrate, group=Country))+
+    geom_line()+
+    facet_wrap(~Age)
+```
 
 
 
