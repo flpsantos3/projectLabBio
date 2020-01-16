@@ -224,12 +224,80 @@ Which country changed (increase or decreased) the most in percentage terms betwe
 
 What are the five (5) most common cancers in 2011? in 2017 for your countries?
 
+As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data we have access. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
+
+```{r allCancerSites, results=FALSE}
+
+# Reading all cancer data
+allCancer <- fread("CancerMortalityEU.csv",
+               header = TRUE, check.names=TRUE)
+
+# Removing superfluous columns
+allCancer[, c("Cause", "ageStart", "ageLabel"):=NULL]
+setnames(allCancer, "ageGroup", "Age")
+
+# Converting table to long format
+allCancer <- melt(allCancer,
+                  id.vars = c("Country","Age","CancerSite"),
+                  variable.name = "Sex+Year",
+                  value.name = "Deaths")
+
+# Separating Year and Sex data
+allCancer[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
+                            "", `Sex+Year`)))]
+allCancer[, Sex:=as.character(unglue_vec(`Sex+Year`,"{x}_{y}",var="x"))]
+allCancer[, "Sex+Year":=NULL]
+setcolorder(allCancer, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+
+# Creating EU as a country
+cancerEU <- allCancer[, .(Country = "European Union", Deaths = sum(Deaths)), by = .(Year, Sex, Age, CancerSite)]
+setcolorder(cancerEU, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+allCancer <- rbind(allCancer, cancerEU)
+
+# Creating All ages rows
+allAge <- allCancer[, .(Age = "All", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, Year, Sex, CancerSite)]
+setcolorder(allAge, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+allCancer <- rbind(allCancer, allAge)
+
+# Selecting the important countries
+allCancer <- allCancer[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")
+                             ][order(Year, Country)]
+
+# Removing "All Cancer" from CancerSite
+allCancer <- allCancer[CancerSite != "All Cancers"]
+
+allCancer
+```
+
+```{r cancersF11}
+#Selecting cancer data for 2011
+cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]
+cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersF[order(-Deaths), head(.SD,5)]
+```
+```{r cancersF17}
+#Selecting cancer data for 2017
+cancersF <- allCancer[Sex=="Females"][Year=="2017"][Age=="All"][order(CancerSite)]
+cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersF[order(-Deaths), head(.SD,5)]
+```
+For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2017: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a notable decrease in the ammount of deaths but that can be explained by the lack of data for 2 of the countries considered (Portugal and Malta).
 
 
+```{r cancersM11}
+#Selecting cancer data for 2011
+cancersM <- allCancer[Sex=="Males"][Year=="2011"][Age=="All"][order(CancerSite)]
+cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersM[order(-Deaths), head(.SD,5)]
+```
 
+```{r cancersM17}
+#Selecting cancer data for 2017
+cancersM <- allCancer[Sex=="Males"][Year=="2017"][Age=="All"][order(CancerSite)]
+cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersM[order(-Deaths), head(.SD,5)]
+```
 
-
-
-
+For males, the most common cancers changed between the years of 2011 and 2017. The most common cancer types in 2011 were Trachea/Bronchus/Lungs, Colon, Prostate, Pancreas and Stomach. In 2017, the most common cancer type remains the same but the number of deaths by Prostate and Liver cancer increase, changing the most common cancer types to Trachea/Bronchus/Lungs, Prostate, Colon, Pancreas and Liver and Intrahepatic Bile Ducts. As with females, the decrease in number of deaths can be explained by the lack of data for 2017 in Portugal and Malta.
 
 
