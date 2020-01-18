@@ -205,12 +205,29 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
 
 Compare the mortality rates by age groups between countries for 2017.
 
-```{r ageMR}
-data.f[Sex %in% "Females"] %>%
-ggplot(aes(Year,mrate, group=Country))+
+```{r ageMR_Females}
+data.2017 <- data.f[Year %in% "2017"][Deaths != "NA"]
+data.2017[Sex %in% "Females"][Age != "All"] %>%
+ggplot(aes(Age,mrate, group=Country, colour=Country))+
+    geom_point()+
     geom_line()+
-    facet_wrap(~Age)
+    theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
+    ggtitle("Mortlity rate per Age group in 2017 on the Female population")+
+    ylab("Mortality Rate")
 ```
+
+
+```{r ageMR_Males}
+data.2017[Sex %in% "Males"][Age != "All"] %>%
+ggplot(aes(Age,mrate, group=Country, colour=Country))+
+    geom_point()+
+    geom_line()+
+    theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
+    ggtitle("Mortlity rate per Age group in 2017 on the Male population")+
+    ylab("Mortality Rate")
+```
+
+
 
 # Third Question
 
