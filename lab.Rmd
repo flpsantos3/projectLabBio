@@ -1,5 +1,5 @@
 ---
-title: "Laboratorio de Bioestatística"
+title: "Laboratório de Bioestatística"
 author: "Group 3"
 date: "28 de Dezembro de 2019"
 output:
@@ -155,13 +155,14 @@ data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Count
 data.f
 ```
 
+## End of the Great Tyiding
 
-# End of the Great Tyiding
+# Questions
 
-# First Question 
+## First Question 
 
-What are the time trends in the mortality rates between countries for all age groups (“All”) combined ?
-– How do they compare with the European Union overall?
+### What are the time trends in the mortality rates between countries for all age groups (“All”) combined ?
+#### - How do they compare with the European Union overall?
 
 ```{r Time trends for females}
 data.f[Age %in% "All"][Sex %in% "Females"] %>% 
@@ -170,15 +171,15 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
     geom_line() +
     ggtitle("Time trends of Liver Cancer on the Female population") +
     ylab("Mortality Rate") +
-    scale_x_continuous(labels=dataF[,Year], breaks = dataF[,Year])
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
     
 ```
   
   * Looking at the data for hepatic cancer mortality rate for females we can note an overall increasing trend for every country, as well as for the European Union.
   * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages, in these countries.
-   + Austria - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2017.
+    + Austria - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2017.
     + Malta - an increase from 2011 (below 3) to 2017 (3,5), with a max in the year 2014. However, it remains one of the countries with the lowest mortality rate.
-   + Cyprus - overall increase, with mortality peaks in 2013 and 2016.
+    + Cyprus - overall increase, with mortality peaks in 2013 and 2016.
   * For Portugal and Malta there is no data for the year 2017, which might help explain the steep decrease in mortality rate for the European Union, as there might be more countries without data for that year.
   * Portugal, Germany and EU show an overall increase, with Portugal's mortality rate increasing the most among them (5.2 to 6).
   * These five countries show lower mortality rates than the European Union for every year, except for Austria in 2012 (not taking 2017 into account).
@@ -190,7 +191,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
     geom_line()+
     ggtitle("Time trends of Liver Cancer on the Male population")+
     ylab("Mortality Rate") +
-    scale_x_continuous(labels=dataF[,Year], breaks = dataF[,Year])
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
 ```
 
   * For males, like females, there is an increase in hepatic liver mortality rate over the years.
@@ -201,9 +202,9 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
   * Portugal and Austria display higher values than the European Union, while the remaining countries stay below the average (aside from 2017).
 
 
-# Second question
+## Second question
 
-Compare the mortality rates by age groups between countries for 2017.
+### Compare the mortality rates by age groups between countries for 2017.
 
 ```{r ageMR_Females}
 data.2017 <- data.f[Year %in% "2017"][Deaths != "NA"]
@@ -217,10 +218,10 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 ```
 
   * In every country we see an increase on the mortality rate as the age classe increases (Starting in the 35 to 39 age classe)
-  * Contrary to the other three countrys (Witch always increase), Cyprus mortality rate just oscilates a bit between the classes 60-64 and 75-79. After that, it cathes the rest of the countries with a very high mortality rate
-  *The firsts Age classes (until the classe 35-39) shown zero to very few mortality rate due to this type of cancer on the Female population
-  * The trend observed here is that older population (From the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, the three countrys analised here have a higher mortality rate than the Europian Union (Except of the age classes of 50-54 and 75-79 of the female population of Cyprus)
-    + Countraty to the other contries, Cyprus starts to have a higher mortality rate at the age class of 45-49
+  * Contrary to the other three countrys (which always increase), Cyprus mortality rate just oscilates a bit between the classes 60-64 and 75-79. After that, it catches the rest of the countries with a very high mortality rate
+  * The firsts Age classes (until the classe 35-39) shown zero to very few mortality rate due to this type of cancer on the Female population
+  * The trend observed here is that older population (From the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, the three countries analysed here have a higher mortality rate than the European Union (except for the age classes of 50-54 and 75-79 of the female population of Cyprus)
+    + Countrary to the other contries, Cyprus starts to have a higher mortality rate at the age class of 45-49
 
 
 ```{r ageMR_Males}
@@ -233,23 +234,23 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     ylab("Mortality Rate")
 ```
 
-  * Again, just like in the data from the female population, we see an increase on the mortality rate as the age classe increases (Starting in the 30 to 34 age classe)
-  *The firsts Age classes (until the classe 35-39) shown zero to very few mortality rate due to this type of cancer on the Male population
-  * The trend observed here is that older population (From the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, the three countrys analised here have a higher mortality rate than the Europian Union (Except Cyprus that only surpass the European Union from the age class 65-69 foward)
-  * Comparying the female and male population, is possible to see that the male population (peak at 94.17 in Austria) has a much higher mortality rate for this kind of cancer than the female population (peak at the 39.59 in Cyprus)
+  * Again, just like in the data from the female population, we see an increase on the mortality rate as the age class increases (starting in the 30 to 34 age class)
+  * The first Age classes (until the class 35-39) shown zero to very few mortality rate due to this type of cancer on the Male population
+  * The trend observed here is that older population (from the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, the three countries analised here have a higher mortality rate than the European Union (except Cyprus that only surpasses the European Union from the age class 65-69 forward)
+  * Comparing the female and male populations, it is possible to see that the male population (peak at 94.17 in Austria) has a much higher mortality rate for this kind of cancer than the female population (peak at the 39.59 in Cyprus)
 
-# Third Question
+## Third Question
 
-Which country changed (increase or decreased) the most in percentage terms between 2011 and 2017?
-  – Plot and tabulate the percentage change overtime by country.
+### Which country changed (increase or decreased) the most in percentage terms between 2011 and 2017?
+#### - Plot and tabulate the percentage change overtime by country.
 
   
 
-# Fourth Question - Most common cancers
+## Fourth Question - Most common cancers
 
-What are the five (5) most common cancers in 2011? in 2017 for your countries?
+### What are the five (5) most common cancers in 2011? in 2017 for your countries?
 
-As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data we have access. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
+As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data that we have access to. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
 
 ```{r allCancerSites, results=FALSE}
 
@@ -306,7 +307,7 @@ cancersF <- allCancer[Sex=="Females"][Year=="2017"][Age=="All"][order(CancerSite
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
 cancersF[order(-Deaths), head(.SD,5)]
 ```
-For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2017: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a notable decrease in the ammount of deaths but that can be explained by the lack of data for 2 of the countries considered (Portugal and Malta).
+For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2017: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a notable decrease in the ammount of deaths from 2011 to 2017 that can maybe be explained by the lack of data for 2 of the countries considered (Portugal and Malta).
 
 
 ```{r cancersM11}
