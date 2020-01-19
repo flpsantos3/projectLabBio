@@ -216,6 +216,12 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     ylab("Mortality Rate")
 ```
 
+  * In every country we see an increase on the mortality rate as the age classe increases (Starting in the 35 to 39 age classe)
+  * Contrary to the other three countrys (Witch always increase), Cyprus mortality rate just oscilates a bit between the classes 60-64 and 75-79. After that, it cathes the rest of the countries with a very high mortality rate
+  *The firsts Age classes (until the classe 35-39) shown zero to very few mortality rate due to this type of cancer on the Female population
+  * The trend observed here is that older population (From the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, the three countrys analised here have a higher mortality rate than the Europian Union (Except of the age classes of 50-54 and 75-79 of the female population of Cyprus)
+    + Countraty to the other contries, Cyprus starts to have a higher mortality rate at the age class of 45-49
+
 
 ```{r ageMR_Males}
 data.2017[Sex %in% "Males"][Age != "All"] %>%
@@ -227,14 +233,16 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     ylab("Mortality Rate")
 ```
 
-
+  * Again, just like in the data from the female population, we see an increase on the mortality rate as the age classe increases (Starting in the 30 to 34 age classe)
+  *The firsts Age classes (until the classe 35-39) shown zero to very few mortality rate due to this type of cancer on the Male population
+  * The trend observed here is that older population (From the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, the three countrys analised here have a higher mortality rate than the Europian Union (Except Cyprus that only surpass the European Union from the age class 65-69 foward)
+  * Comparying the female and male population, is possible to see that the male population (peak at 94.17 in Austria) has a much higher mortality rate for this kind of cancer than the female population (peak at the 39.59 in Cyprus)
 
 # Third Question
 
 Which country changed (increase or decreased) the most in percentage terms between 2011 and 2017?
   – Plot and tabulate the percentage change overtime by country.
-  
-  
+
   
 
 # Fourth Question - Most common cancers
