@@ -168,18 +168,6 @@ data.2017$Age <- factor(data.2017$Age, levels(data.2017$Age)[c(1,10,2:9,11:19)])
 ## End of the Great Tyiding
 
 
-## Data for the second exercice
-
-```{r data.ex2}
-data.2017 <- data.f[Year %in% "2017"][Deaths != "NA"]
-data.2017$Age <- as.factor(data.2017$Age)
-levels(data.2017$Age)
-data.2017$Age <- factor(data.2017$Age, levels(data.2017$Age)[c(1,10,2:9,11:19)])
-```
-
-
-# End of the Great Tyiding
-
 # Questions
 
 ## First Question 
