@@ -156,6 +156,17 @@ data.f
 ```
 
 
+
+## Data for the second exercice
+
+```{r data.ex2}
+data.2017 <- data.f[Year %in% "2017"][Deaths != "NA"]
+data.2017$Age <- as.factor(data.2017$Age)
+levels(data.2017$Age)
+data.2017$Age <- factor(data.2017$Age, levels(data.2017$Age)[c(1,10,2:9,11:19)])
+```
+
+
 # End of the Great Tyiding
 
 # First Question 
@@ -170,8 +181,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
     geom_line() +
     ggtitle("Time trends of Liver Cancer on the Female population") +
     ylab("Mortality Rate") +
-    scale_x_continuous(labels=dataF[,Year], breaks = dataF[,Year])
-    
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
 ```
   
   * Looking at the data for hepatic cancer mortality rate for females we can note an overall increasing trend for every country, as well as for the European Union.
@@ -190,7 +200,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
     geom_line()+
     ggtitle("Time trends of Liver Cancer on the Male population")+
     ylab("Mortality Rate") +
-    scale_x_continuous(labels=dataF[,Year], breaks = dataF[,Year])
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
 ```
 
   * For males, like females, there is an increase in hepatic liver mortality rate over the years.
@@ -206,7 +216,6 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
 Compare the mortality rates by age groups between countries for 2017.
 
 ```{r ageMR_Females}
-data.2017 <- data.f[Year %in% "2017"][Deaths != "NA"]
 data.2017[Sex %in% "Females"][Age != "All"] %>%
 ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_point()+
@@ -230,7 +239,8 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_line()+
     theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
     ggtitle("Mortlity rate per Age group in 2017 on the Male population")+
-    ylab("Mortality Rate")
+    ylab("Mortality Rate") +
+    scale_x_discrete(labels=data.f[,Age], breaks = data.f[,Age])
 ```
 
   * Again, just like in the data from the female population, we see an increase on the mortality rate as the age classe increases (Starting in the 30 to 34 age classe)
@@ -242,7 +252,6 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 Which country changed (increase or decreased) the most in percentage terms between 2011 and 2017?
   – Plot and tabulate the percentage change overtime by country.
-
   
 
 # Fourth Question - Most common cancers
@@ -318,9 +327,12 @@ cancersM[order(-Deaths), head(.SD,5)]
 
 ```{r cancersM17}
 #Selecting cancer data for 2017
+library(kableExtra)
 cancersM <- allCancer[Sex=="Males"][Year=="2017"][Age=="All"][order(CancerSite)]
 cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersM[order(-Deaths), head(.SD,5)]
+cancersM[order(-Deaths), head(.SD,5)] %>%
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
 ```
 
 For males, the most common cancers changed between the years of 2011 and 2017. The most common cancer types in 2011 were Trachea/Bronchus/Lungs, Colon, Prostate, Pancreas and Stomach. In 2017, the most common cancer type remains the same but the number of deaths by Prostate and Liver cancer increase, changing the most common cancer types to Trachea/Bronchus/Lungs, Prostate, Colon, Pancreas and Liver and Intrahepatic Bile Ducts. As with females, the decrease in number of deaths can be explained by the lack of data for 2017 in Portugal and Malta.
