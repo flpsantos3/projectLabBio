@@ -187,12 +187,11 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
   
   * Looking at the data for hepatic cancer mortality rate for females we can note an overall increasing trend for every country, as well as for the European Union.
   * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages, in these countries.
-    + Austria - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2017.
-    + Malta - an increase from 2011 (below 3) to 2017 (3,5), with a max in the year 2014. However, it remains one of the countries with the lowest mortality rate.
+    + Austria - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2016.
+    + Malta - an increase from 2011 (below 3) to 2016 (3,5), with a max in the year 2014. However, it remains one of the countries with the lowest mortality rate.
     + Cyprus - overall increase, with mortality peaks in 2013 and 2016.
-  * For Portugal and Malta there is no data for the year 2017, which might help explain the steep decrease in mortality rate for the European Union, as there might be more countries without data for that year.
   * Portugal, Germany and EU show an overall increase, with Portugal's mortality rate increasing the most among them (5.2 to 6).
-  * These five countries show lower mortality rates than the European Union for every year, except for Austria in 2012 (not taking 2017 into account).
+  * These five countries show lower mortality rates than the European Union for every year, except for Austria in 2012 and 2014.
 
 ```{r Time trends for males}
 data.f[Age %in% "All"][Sex %in% "Males"] %>% 
@@ -209,7 +208,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
   * Malta displays the steepest increase in 2016 (from 7 to 13.8).
   *  Portugal displays the highest values (close to 17.5) while Cyprus has the lowest (even though the increase in mortality rate over the years is on par with Portugal).
   * The overall values for mortality are higher than those of females.
-  * Portugal and Austria display higher values than the European Union, while the remaining countries stay below the average (aside from 2017).
+  * Portugal and Austria display higher values than the European Union, while the remaining countries stay below the average.
 
 
 ## Second question
@@ -251,13 +250,13 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 ## Third Question
 
-### Which country changed (increase or decreased) the most in percentage terms between 2011 and 2017?
+### Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016?
 #### - Plot and tabulate the percentage change overtime by country.
 
 
 ## Fourth Question - Most common cancers
 
-### What are the five (5) most common cancers in 2011? in 2017 for your countries?
+### What are the five (5) most common cancers in 2011? in 2016 for your countries?
 
 As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data that we have access to. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
 
@@ -310,13 +309,13 @@ cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
 cancersF[order(-Deaths), head(.SD,5)]
 ```
-```{r cancersF17}
-#Selecting cancer data for 2017
-cancersF <- allCancer[Sex=="Females"][Year=="2017"][Age=="All"][order(CancerSite)]
+```{r cancersF16}
+#Selecting cancer data for 2016
+cancersF <- allCancer[Sex=="Females"][Year=="2016"][Age=="All"][order(CancerSite)]
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
 cancersF[order(-Deaths), head(.SD,5)]
 ```
-For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2017: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a notable decrease in the ammount of deaths from 2011 to 2017 that can maybe be explained by the lack of data for 2 of the countries considered (Portugal and Malta).
+For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2016: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.
 
 
 ```{r cancersM11}
@@ -326,18 +325,17 @@ cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)
 cancersM[order(-Deaths), head(.SD,5)]
 ```
 
-```{r cancersM17}
-#Selecting cancer data for 2017
+```{r cancersM16}
+#Selecting cancer data for 2016
 library(kableExtra)
-cancersM <- allCancer[Sex=="Males"][Year=="2017"][Age=="All"][order(CancerSite)]
+cancersM <- allCancer[Sex=="Males"][Year=="2016"][Age=="All"][order(CancerSite)]
 cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
 cancersM[order(-Deaths), head(.SD,5)] %>%
   kable(align = "rc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
 
-For males, the most common cancers changed between the years of 2011 and 2017. The most common cancer types in 2011 were Trachea/Bronchus/Lungs, Colon, Prostate, Pancreas and Stomach. In 2017, the most common cancer type remains the same but the number of deaths by Prostate and Liver cancer increase, changing the most common cancer types to Trachea/Bronchus/Lungs, Prostate, Colon, Pancreas and Liver and Intrahepatic Bile Ducts. As with females, the decrease in number of deaths can be explained by the lack of data for 2017 in Portugal and Malta.
-
+For males, the most common cancers remained mostly the same between the years of 2011 and 2016, the only difference being the increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer, overtaking Stomach cancer as the fifth most deadly type of cancer. The most common cancer types for both years was Trachea/Bronchus/Lungs by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
 
 ```{r sessionInfo, echo=TRUE}
 sessionInfo()
