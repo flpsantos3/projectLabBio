@@ -1,36 +1,23 @@
 ---
 title: "Cancer in Liver and Intrahepatic Bile Ducts - mortality rate in selected European Countries"
 author: "Presentation by Carolina Santos, Filipe Santos e Hugo Anjos"
-date: "21/01/2020"
+date: "27/01/2020"
 output:
-  slidy_presentation: default
-  ioslides_presentation: default
+  ioslides_presentation:
+    widescreen: true
+    smaller: false
+    transition: faster
+    css: styles.css
+    logo: fcullogo.png
+    
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
+## Introduction {.flexbox .vcenter }
+### Questions
+### Describing the cancer
+### Countries in study
 
-# Cancer in Liver and Intrahepatic Bile Ducts
-## mortality rate over time in selected European Countries
-
-
-
-## Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
-```
-
-## Slide with Plot
-
-```{r pressure}
-plot(pressure)
-```
+<div class="notes">
+Para adicionar notas p/ apresentação...
+</div>
 
