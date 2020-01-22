@@ -16,6 +16,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+      widescreen: true
     seal: false
 ---
 
@@ -34,18 +35,274 @@ class: title-slide
 #### Universtity of Lisbon, Faculty of Sciences 
 
 ---
-class: intro-slide
+class: intro-slide, left
 
 # Introduction 
+
 ## Selected Countries & Cancer Site
 
 * Austria, Cyprus, Germany, Malta, Portugal and European Union
 
 <img src="cancepic.png" alt="drawing" width="750" />
 
+
+<div class="footer">Image from ....</div>
+
 ---
-class: next3-slide
-# Time trends in the mortality rates between countries for all age groups combined? 
-# How do they compare with EU overall?
+class: third-slide
+
+## 1.1. Time trends in the mortality rates between countries for all age groups combined? 
+
+```{r data, include=FALSE}
+library(here)
+library(data.table)
+library(unglue)
+library(ggplot2)
+library(magrittr)
+library(data.table)
+library(dplyr)
+
+data <- fread(here("CancerMortalityEU.csv"), header = TRUE, check.names = TRUE)
+popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)  
 
 
+names(data)
+cancro <- data[CancerSite %in% "Liver and Intrahepatic Bile Ducts"]
+str(cancro)
+cancro[, .N, by="CancerSite"] #Pode-se tirar esta coluna
+cancro[, .N, by="Cause"] #Pode-se tirar esta coluna mas a ver se não se perde a informação
+cancro[, .N, by="ageStart"] #Acho que se pode tirar também
+cancro[, .N, by="ageLabel"] #Também acho que se pode tirar se bem que esta pode ser util à frente
+cancro[, c("CancerSite", "Cause", "ageStart", "ageLabel"):=NULL]
+setnames(cancro, "ageGroup", "Age")
+
+cancer.new <- melt(cancro, id.vars = c("Country","Age"), variable.name = "all", value.name = "Deaths")
+cancer.new[, `:=` (Year=as.numeric(gsub("[^[:digit:].]", "", all)))]
+cancer.new[, Sex:=as.character(unglue_vec(all,"{x}_{y}",var="x"))]
+cancer.new[, .N, by="Year"]
+cancer.new[, .N, by="Sex"]
+cancer.new[, all:=NULL]
+setcolorder(cancer.new, c("Country","Age","Sex","Year","Deaths"))
+cancer.new <- na.omit(cancer.new)
+
+cancer.EU <- cancer.new[, .(Country = "European Union", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Year, Sex, Age)]
+setcolorder(cancer.EU, c("Country","Age","Sex","Year","Deaths"))
+cancer.liver <- rbind(cancer.new,cancer.EU)
+
+
+allAge <- cancer.liver[, .(Age = "All", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, Year, Sex)]
+setcolorder(allAge, c("Country", "Sex", "Age", "Year", "Deaths"))
+cancer.liver <- rbind(cancer.liver,allAge)
+cancer.liver <- cancer.liver[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")][order(Year, Country, Sex)]
+cancer.liver
+
+popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)
+
+popdt[, c("ageStart","ageLabel","X2000","X2001","X2002","X2003","X2004","X2005","X2006","X2007","X2008","X2009","X2010","X2018"):=NULL]
+setnames(popdt, c("ageGroup"), c("Age"))
+
+popT <- melt(popdt,
+             id.vars = c("Country", "Sex", "Age"),
+             measure = patterns("^X"),
+             variable.name = "YearX",
+             value.name = c("Population"),
+             na.rm = TRUE)
+
+popT[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
+                                  "", YearX)))][, YearX := NULL]
+setcolorder(popT, c("Country", "Sex", "Age", "Year", "Population"))
+popT <- popT[Sex != "Total"]
+
+popEU <- popT[, .(Population = sum(Population, na.rm = TRUE)), by = .(Year, Sex, Age)][, Country := "European Union"]
+setcolorder(popEU, c("Country", "Sex", "Age", "Year", "Population"))
+pop <- rbind(popT, popEU)
+pop <- pop[order(Year, Country)]
+
+allAge <- pop[, .(Age = "All", Population = sum(Population, na.rm = TRUE)), by = .(Country, Year, Sex)]
+setcolorder(allAge, c("Country", "Sex", "Age", "Year", "Population"))
+allAge <- allAge[order(Year, Country)]
+
+pop <- rbind(pop, allAge)
+pop <- pop[order(Year, Country, Sex)]
+popF <- pop[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")]
+popF <- popF[order(Year, Country)]
+popF
+
+data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
+data.f[, mrate := round(100000*Deaths/Population,2)]
+data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Country]
+data.f
+```
+
+```{r q1 females, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
+data.f[Age %in% "All"][Sex %in% "Females"] %>% 
+ggplot(aes(Year,mrate, group=Country, colour = Country)) +
+    geom_point(size=2) +
+    geom_line() +
+    ggtitle("Time trends of Liver Cancer on the Female population") +
+    ylab("Mortality Rate") +
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
+```
+
+---
+class: fourth-slide
+
+## 1.2. Time trends in the mortality rates between countries for all age groups combined? 
+
+```{r q1 males, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
+data.f[Age %in% "All"][Sex %in% "Males"] %>% 
+ggplot(aes(Year,mrate, group=Country, colour = Country))+
+    geom_point(size=2)+
+    geom_line()+
+    ggtitle("Time trends of Liver Cancer on the Male population")+
+    ylab("Mortality Rate") +
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
+```
+
+---
+class: fifth-slide
+
+## Mortality rates by age groups between countries in 2016
+* Females 
+
+```{r data.ex2, include=FALSE}
+data.2016 <- data.f[Year %in% "2016"][Deaths != "NA"]
+data.2016$Age <- as.factor(data.2016$Age)
+levels(data.2016$Age)
+data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
+```
+
+```{r q2 females, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
+data.2016[Sex %in% "Females"][Age != "All"] %>%
+ggplot(aes(Age,mrate, group=Country, colour=Country))+
+    geom_point()+
+    geom_line()+
+    theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
+    ggtitle("Mortlity rate per Age group in 2016 on the Female population")+
+    ylab("Mortality Rate")
+```
+
+---
+class: sixth-slide 
+## Mortality rates by age groups between countries in 2016
+
+.pull-left[
+* Males
+]
+```{r q2 males, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
+data.2016[Sex %in% "Males"][Age != "All"] %>%
+ggplot(aes(Age,mrate, group=Country, colour=Country))+
+    geom_point()+
+    geom_line()+
+    theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
+    ggtitle("Mortlity rate per Age group in 2016 on the Male population")+
+    ylab("Mortality Rate") +
+    scale_x_discrete(labels=data.f[,Age], breaks = data.f[,Age])
+```
+
+
+---
+class: seventh-slide 
+
+---
+class: eighth-slide 
+
+
+
+---
+class: ninth-slide
+
+---
+class: tenth-slide
+
+
+## Most common cancers for females in 2011 and 2016
+
+```{r data.ex4, include=FALSE}
+library(kableExtra)
+# Reading all cancer data
+allCancer <- fread("CancerMortalityEU.csv",
+               header = TRUE, check.names=TRUE)
+
+# Removing superfluous columns
+allCancer[, c("Cause", "ageStart", "ageLabel"):=NULL]
+setnames(allCancer, "ageGroup", "Age")
+
+# Converting table to long format
+allCancer <- melt(allCancer,
+                  id.vars = c("Country","Age","CancerSite"),
+                  variable.name = "Sex+Year",
+                  value.name = "Deaths")
+
+# Separating Year and Sex data
+allCancer[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
+                            "", `Sex+Year`)))]
+allCancer[, Sex:=as.character(unglue_vec(`Sex+Year`,"{x}_{y}",var="x"))]
+allCancer[, "Sex+Year":=NULL]
+setcolorder(allCancer, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+
+# Creating EU as a country
+cancerEU <- allCancer[, .(Country = "European Union", Deaths = sum(Deaths)), by = .(Year, Sex, Age, CancerSite)]
+setcolorder(cancerEU, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+allCancer <- rbind(allCancer, cancerEU)
+
+# Creating All ages rows
+allAge <- allCancer[, .(Age = "All", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, Year, Sex, CancerSite)]
+setcolorder(allAge, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+allCancer <- rbind(allCancer, allAge)
+
+# Selecting the important countries
+allCancer <- allCancer[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")
+                             ][order(Year, Country)]
+
+# Removing "All Cancer" from CancerSite
+allCancer <- allCancer[CancerSite != "All Cancers"]
+
+allCancer
+```
+
+```{r q4 females2011, echo=FALSE, fig.align="center"}
+library(kableExtra)
+cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]
+cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersF[order(-Deaths), head(.SD,5)]%>% 
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r q4 females2016,echo=FALSE, fig.align="center"}
+library(kableExtra)
+cancersF <- allCancer[Sex=="Females"][Year=="2016"][Age=="All"][order(CancerSite)]
+cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersF[order(-Deaths), head(.SD,5)]%>% 
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+---
+class: eleventh-slide
+
+## Most common cancers for men in 2011 and 2016
+```{r q4 males2011, echo=FALSE, fig.align="center"}
+library(kableExtra)
+cancersM <- allCancer[Sex=="Males"][Year=="2011"][Age=="All"][order(CancerSite)]
+cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersM[order(-Deaths), head(.SD,5)]%>% 
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+
+```{r q4 males2016, echo=FALSE, fig.align="center"}
+library(kableExtra)
+cancersM <- allCancer[Sex=="Males"][Year=="2016"][Age=="All"][order(CancerSite)]
+cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
+cancersM[order(-Deaths), head(.SD,5)] %>%
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+---
+class: conclusion-slide
+
+## Conclusion 

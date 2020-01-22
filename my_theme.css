@@ -84,36 +84,81 @@
 .intro-slide  {
 	background-image: url("background2.png");
 	background-size: cover;
-}
-
-.intro-slide {
-  font-style: normal;
+	font-style: normal;
   font-family: arial;
 }
 
-.next3-slide  {
+
+.third-slide  {
 	background-image: url("background2.png");
 	background-size: cover;
+	font-style: normal;
+  font-family: arial;
 }
 
-.next4-slide  {
-	background-image: url("background2.png");
-	background-size: cover;
+.third-slide .emphasized {
+  font-size: 1.2em;
 }
 
-.next5-slide  {
+.fourth-slide  {
 	background-image: url("background2.png");
 	background-size: cover;
+	font-style: normal;
+  font-family: arial;
 }
-.next6-slide  {
+
+.fifth-slide  {
 	background-image: url("background2.png");
 	background-size: cover;
+	font-style: normal;
+  font-family: arial;
 }
-.next7-slide  {
+
+.sixth-slide  {
 	background-image: url("background2.png");
 	background-size: cover;
+	font-style: normal;
+  font-family: arial;
 }
-.next8-slide  {
+
+.seventh-slide  {
 	background-image: url("background2.png");
 	background-size: cover;
+	font-style: normal;
+  font-family: arial;
+}
+
+.eighth-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+	font-style: normal;
+  font-family: arial;
+}
+
+.ninth-slide {
+	background-image: url("background2.png");
+	background-size: cover;
+	font-style: normal;
+  font-family: arial;
+}
+
+.tenth-slide {
+	background-image: url("background2.png");
+	background-size: cover;
+	font-style: normal;
+  font-family: arial;
+}
+
+.eleventh-slide {
+	background-image: url("background2.png");
+	background-size: cover;
+	font-style: normal;
+  font-family: arial;
+}
+
+.conclusion-slide {
+	background-image: url("background2.png");
+	background-size: cover;
+	font-style: normal;
+  font-family: arial;
 }
