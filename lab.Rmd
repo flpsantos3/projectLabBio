@@ -23,10 +23,8 @@ library(unglue)
 library(ggplot2)
 library(magrittr)
 
-data <- fread(here("CancerMortalityEU.csv"), 
-              header = TRUE, check.names = TRUE)
-popdt <- fread("PopulationEU.csv",
-               header = TRUE, check.names=TRUE)
+data <- fread(here("CancerMortalityEU.csv"), header = TRUE, check.names = TRUE)
+popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)
 ```
 
 # Data Tidying 
@@ -158,10 +156,10 @@ data.f
 ## Data for the second exercice
 
 ```{r data.ex2}
-data.2017 <- data.f[Year %in% "2017"][Deaths != "NA"]
-data.2017$Age <- as.factor(data.2017$Age)
-levels(data.2017$Age)
-data.2017$Age <- factor(data.2017$Age, levels(data.2017$Age)[c(1,10,2:9,11:19)])
+data.2016 <- data.f[Year %in% "2016"][Deaths != "NA"]
+data.2016$Age <- as.factor(data.2016$Age)
+levels(data.2016$Age)
+data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 ```
 
 
@@ -216,12 +214,12 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
 ### Compare the mortality rates by age groups between countries for 2017.
 
 ```{r ageMR_Females}
-data.2017[Sex %in% "Females"][Age != "All"] %>%
+data.2016[Sex %in% "Females"][Age != "All"] %>%
 ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_point()+
     geom_line()+
     theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
-    ggtitle("Mortlity rate per Age group in 2017 on the Female population")+
+    ggtitle("Mortlity rate per Age group in 2016 on the Female population")+
     ylab("Mortality Rate")
 ```
 
@@ -233,12 +231,12 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 
 ```{r ageMR_Males}
-data.2017[Sex %in% "Males"][Age != "All"] %>%
+data.2016[Sex %in% "Males"][Age != "All"] %>%
 ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_point()+
     geom_line()+
     theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
-    ggtitle("Mortlity rate per Age group in 2017 on the Male population")+
+    ggtitle("Mortlity rate per Age group in 2016 on the Male population")+
     ylab("Mortality Rate") +
     scale_x_discrete(labels=data.f[,Age], breaks = data.f[,Age])
 ```
@@ -250,8 +248,26 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 ## Third Question
 
-### Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016?
-#### - Plot and tabulate the percentage change overtime by country.
+### Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016? - Plot and tabulate the percentage change overtime by country.
+
+```{r}
+data.diff <- data.f[Year != 2016][Year %in% 2011]
+data.diff[,per := ((data.f[Year %in% 2016]$mrate - data.diff$mrate)/data.f[Year %in% 2011]$mrate*100)]
+```
+
+```{r}
+data.all <- data.f[Age %in% "All"]
+
+data.diff <- data.all[Year != 2016][Year %in% 2011]
+data.diff[,per := ((data.all[Year %in% 2016]$mrate - data.diff$mrate)/data.all[Year %in% 2011]$mrate*100)]
+
+pct.diff <- data.diff[!is.na(Country)][
+  order(Country, Year, Sex, per), head(.SD, 1), by = .(Country, Year, Sex)][
+    , .(Country, Year, Sex, per)]
+
+setnames(pct.diff, "per", "Difference in % between 2016 and 2011")
+pct.diff
+```
 
 
 ## Fourth Question - Most common cancers
@@ -261,7 +277,7 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data that we have access to. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
 
 ```{r allCancerSites, results=FALSE}
-
+library(kableExtra)
 # Reading all cancer data
 allCancer <- fread("CancerMortalityEU.csv",
                header = TRUE, check.names=TRUE)
@@ -307,13 +323,18 @@ allCancer
 #Selecting cancer data for 2011
 cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersF[order(-Deaths), head(.SD,5)]
+cancersF[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
 ```
+
 ```{r cancersF16}
 #Selecting cancer data for 2016
 cancersF <- allCancer[Sex=="Females"][Year=="2016"][Age=="All"][order(CancerSite)]
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersF[order(-Deaths), head(.SD,5)]
+cancersF[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
 ```
 For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2016: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.
 
@@ -322,12 +343,13 @@ For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the Euro
 #Selecting cancer data for 2011
 cancersM <- allCancer[Sex=="Males"][Year=="2011"][Age=="All"][order(CancerSite)]
 cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersM[order(-Deaths), head(.SD,5)]
+cancersM[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "rc")%>% 
+  kable_styling(bootstrap_options = "striped")
 ```
 
 ```{r cancersM16}
 #Selecting cancer data for 2016
-library(kableExtra)
 cancersM <- allCancer[Sex=="Males"][Year=="2016"][Age=="All"][order(CancerSite)]
 cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
 cancersM[order(-Deaths), head(.SD,5)] %>%
