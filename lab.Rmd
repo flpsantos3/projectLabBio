@@ -1,6 +1,6 @@
 ---
-title: "Laboratório de Bioestatística"
-author: "Group 3"
+title: "Laboratory of Biostatistics Assessment"
+author: "Group nº3 - Carolina Santos, Filipe Santos & Hugo Anjos"
 date: "28 de Dezembro de 2019"
 output:
   html_document:
@@ -16,20 +16,53 @@ output:
     toc_depth: '3'
 ---
 
-```{r dtStart, results= FALSE}
+```{r dtStart, include=FALSE}
+knitr::opts_chunk$set(out.width = "100%", echo = TRUE)
 library(here)
 library(data.table)
 library(unglue)
 library(ggplot2)
 library(magrittr)
+library(kableExtra)
+```
 
+# *Objectives*
+
+The main objective is to *explore Liver and Intrahepatic Bile Ducts Cancer mortality geographical and time trends* for the following countries:
++ `Austria`
+
++ `Cyprus`
+
++ `Germany`
+
++ `Malta`
+
++ `Portugal`
+
++ `European Union`
+
+To do so, we will answer the following questions, always *treating males and females separately*:
+
++ What are the time trends in the mortality rates between countries for all age groups combines? How do they compare with the European Union overall?
+
++ Compare the mortality rates by age groups between countries for 2016.
+
++ Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016?
+
++ What are the five most common cancer in 2011 and in 2017?
+
+# *Reading the Data*
+```{r readind data}
 data <- fread(here("CancerMortalityEU.csv"), header = TRUE, check.names = TRUE)
 popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)
 ```
 
-# Data Tidying 
+# *Data Limitations*
 
-## Cancer data
+By taking a quick view at the data sets we can observe that there are some missing data from some countries and for the year 2017, in specific, there are no data regarding the cancer for the countries of Portugal and Malta. 
+
+# *Data Tidying* 
+## `Cancer Data`:
 
 ```{r cancerData, results= FALSE}
 # Colunas certas nos dados
@@ -87,7 +120,7 @@ cancer.liver
 ```
 
 
-## Population Data
+## `Population Data`:
 
 ```{r dtPop, results= FALSE}
 # Importing data
@@ -144,7 +177,7 @@ popF <- popF[order(Year, Country)]
 popF
 ```
 
-## Merging of the two data sets
+## `Merging the two data sets`:
 
 ```{r final data set}
 data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
@@ -153,7 +186,7 @@ data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Count
 data.f
 ```
 
-## Data for the second exercice
+## `Preparing the Data for the second question`:
 
 ```{r data.ex2}
 data.2016 <- data.f[Year %in% "2016"][Deaths != "NA"]
@@ -162,16 +195,15 @@ levels(data.2016$Age)
 data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 ```
 
+## `End of the Great Tyiding!`
 
-## End of the Great Tyiding
 
+# *Questions*
+## `First Question`
 
-# Questions
+> What are the time trends in the mortality rates between countries for all age groups (“All”) combined?
 
-## First Question 
-
-### What are the time trends in the mortality rates between countries for all age groups (“All”) combined ?
-#### - How do they compare with the European Union overall?
+>How do they compare with the European Union overall?
 
 ```{r Time trends for females}
 data.f[Age %in% "All"][Sex %in% "Females"] %>% 
@@ -185,9 +217,9 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
   
   * Looking at the data for hepatic cancer mortality rate for females we can note an overall increasing trend for every country, as well as for the European Union.
   * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages, in these countries.
-    + Austria - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2016.
-    + Malta - an increase from 2011 (below 3) to 2016 (3,5), with a max in the year 2014. However, it remains one of the countries with the lowest mortality rate.
-    + Cyprus - overall increase, with mortality peaks in 2013 and 2016.
+    + `Austria` - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2016.
+    + `Malta` - an increase from 2011 (below 3) to 2016 (3,5), with a max in the year 2014. However, it remains one of the countries with the lowest mortality rate.
+    + `Cyprus` - overall increase, with mortality peaks in 2013 and 2016.
   * Portugal, Germany and EU show an overall increase, with Portugal's mortality rate increasing the most among them (5.2 to 6).
   * These five countries show lower mortality rates than the European Union for every year, except for Austria in 2012 and 2014.
 
@@ -209,9 +241,9 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
   * Portugal and Austria display higher values than the European Union, while the remaining countries stay below the average.
 
 
-## Second question
+## `Second Question`
 
-### Compare the mortality rates by age groups between countries for 2017.
+> Compare the mortality rates by age groups between countries for 2017.
 
 ```{r ageMR_Females}
 data.2016[Sex %in% "Females"][Age != "All"] %>%
@@ -251,15 +283,64 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     + Inversily, Malta only shows a mortality rate lower than the European Union in the age classes of 60-64 and 65-69
   * In general, the mortality rate of this type of cancer is higher in the Male population than on the Female population, at least, in the conuntrys here analyse
 
-## Third Question
+## `Third Question`
 
+> Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016?
+
+> Plot and tabulate the percentage change overtime by country.
+
+```{r percentage change table}
+# For the male population
+library(kableExtra)
+data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
+data.diff.M[,per := ((data.diff.M$mrate - data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
+diff.M <- data.diff.M[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
+diff.Males <- dcast(diff.M, Year ~ Country, value.var = "DiffCountry" )
+
+diff.Males %>%
+  kable(align="cllll") %>% 
+  kable_styling(bootstrap_options = "striped")
+
+# For the Female population
+
+<<<<<<< HEAD
 ### Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016? 
   - Plot and tabulate the percentage change overtime by country.
+=======
+data.diff.F <- data.f[Year != 2017][Year != 2011 & Sex %in% "Females" & Age %in% "All"]
+data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
+diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
+diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
+
+diff.Females %>%
+  kable(align="cllll") %>% 
+  kable_styling(bootstrap_options = "striped")
+
+```
 
 
-## Fourth Question - Most common cancers
+```{r percentage change plots}
+# For the female population
+data.diff.F %>%
+  ggplot(aes(Year, per, group=Country, colour =Country))+
+    geom_point()+
+    geom_line()
 
-### What are the five (5) most common cancers in 2011? in 2016 for your countries?
+# For the male population
+data.diff.M %>%
+  ggplot(aes(Year, per, group=Country, colour =Country))+
+    geom_point()+
+    geom_line()
+
+
+# Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
+```
+>>>>>>> 58e38ea904e46c3db3d16aaf2423b4c8a8f00904
+
+
+## `Fourth Question`
+
+> What are the five (5) most common cancers in 2011? in 2016 for your countries?
 
 As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data that we have access to. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
 
