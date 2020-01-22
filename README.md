@@ -1,6 +1,10 @@
 # `Laboratory of Biostatistics Assessment`: 
 * Liver and Intrahepatic Bile Ducts Cancer in European Countries. 
 
+<div>
+<img src="preview.png">
+</div>
+
 ## Objectives
 * Explore cancer mortality geographical and time trends in the European Union
 * Practicing the R skills learned throughout the semester 
@@ -18,4 +22,5 @@ The countries we will be analysing are: Austria, Cyprus, Germany, Portugal, Malt
 
 + What are the five most common cancer in 2011 and in 2017?
 
+## Acknowledgements
 
