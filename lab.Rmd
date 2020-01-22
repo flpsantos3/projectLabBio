@@ -51,17 +51,17 @@ To do so, we will answer the following questions, always *treating males and fem
 
 + What are the five most common cancer in 2011 and in 2017?
 
-# *Reading the Data*: 
-```{r}
+# *Reading the Data*
+```{r readind data}
 data <- fread(here("CancerMortalityEU.csv"), header = TRUE, check.names = TRUE)
 popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)
 ```
 
-# *Data Limitations*:
+# *Data Limitations*
 
 By taking a quick view at the data sets we can observe that there are some missing data from some countries and for the year 2017, in specific, there are no data regarding the cancer for the countries of Portugal and Malta. 
 
-# *Data Tidying*: 
+# *Data Tidying* 
 ## `Cancer Data`:
 
 ```{r cancerData, results= FALSE}
@@ -198,7 +198,7 @@ data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 ## `End of the Great Tyiding!`
 
 
-# *Questions*:
+# *Questions*
 ## `First Question`
 
 > What are the time trends in the mortality rates between countries for all age groups (“All”) combined?
@@ -284,7 +284,7 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 > Plot and tabulate the percentage change overtime by country.
 
-```{r}
+```{r percentage change table}
 # For the male population
 library(kableExtra)
 data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
@@ -310,7 +310,7 @@ diff.Females %>%
 ```
 
 
-```{r}
+```{r percentage change plots}
 # For the female population
 data.diff.F %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
