@@ -1,0 +1,51 @@
+---
+title: "Cancer in Liver and Intrahepatic Bile Ducts" 
+subtitle: "Mortality in European Countries"
+author: "Carolina Santos, Filipe Santos e Hugo Anjos"
+institute: "Faculty of Sciences, University of Lisbon"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: ["my_theme.css", "default"]
+    nature:
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>`
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    seal: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+class: title-slide   
+
+<img src="fcullogo.png" alt="drawing" width="250"/>
+
+
+# Liver and Intrahepatic Bile Duct Cancer
+## Mortality in European Countries 
+### Carolina Santos, Filipe Santos & Hugo Anjos 
+#### Universtity of Lisbon, Faculty of Sciences 
+
+---
+class: intro-slide
+
+# Introduction 
+## Selected Countries & Cancer Site
+
+* Austria, Cyprus, Germany, Malta, Portugal and European Union
+
+<img src="cancepic.png" alt="drawing" width="750" />
+
+---
+class: next3-slide
+# Time trends in the mortality rates between countries for all age groups combined? 
+# How do they compare with EU overall?
+
+

@@ -1,0 +1,119 @@
+.remark-slide-number {
+  position: inherit;
+}
+
+.remark-slide-number .progress-bar-container {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  display: block;
+  left: 0;
+  right: 0;
+}
+
+.remark-slide-number .progress-bar {
+  height: 100%;
+  background-color: navy;
+}
+
+.title-slide {
+	background-image: url("background2.png");
+  background-size: cover; 
+}
+
+.title-slide h1 {
+  text-align: center;
+  font-family: arial;
+  font-weight: bold;
+  font-size: 36pt;
+  color: white;
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.title-slide h2 {
+ text-align: center;
+ font-family: arial;
+ font-weight: bold;
+ font-size: 24pt;
+ color: white;
+ position: fixed;
+ top: 60%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.title-slide h3 {
+ text-align: center;
+ font-family: arial;
+ font-weight: normal;
+ font-size: 15pt;
+ color: white;
+ position: fixed;
+ top: 80%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.title-slide h4 {
+ text-align: center;
+ font-family: arial;
+ font-weight: normal;
+ font-size: 15pt;
+ color: white;
+ position: fixed;
+ top: 85%;
+ left: 50%;
+ transform: translate(-50%, -50%);
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.title-slide .remark-slide-number {
+	display: none;
+}
+
+.intro-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+}
+
+.intro-slide {
+  font-style: normal;
+  font-family: arial;
+}
+
+.next3-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+}
+
+.next4-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+}
+
+.next5-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+}
+.next6-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+}
+.next7-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+}
+.next8-slide  {
+	background-image: url("background2.png");
+	background-size: cover;
+}
