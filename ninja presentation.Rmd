@@ -33,7 +33,7 @@ class: title-slide
 ## Mortality in European Countries 
 ### Carolina Santos, Filipe Santos & Hugo Anjos 
 #### Universtity of Lisbon, Faculty of Sciences 
-
+##### Laboratory of Biostatistics 2019/2020
 ---
 class: intro-slide, left
 
@@ -49,9 +49,9 @@ class: intro-slide, left
 <div class="footer">Image from ....</div>
 
 ---
-class: third-slide
+class: third-slide, center
 
-## 1.1. Time trends in the mortality rates between countries for all age groups combined? 
+## Time trends in the mortality rates between countries for all age groups combined? 
 
 ```{r data, include=FALSE}
 library(here)
@@ -136,12 +136,17 @@ data.f
 
 ```{r q1 females, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
 data.f[Age %in% "All"][Sex %in% "Females"] %>% 
-ggplot(aes(Year,mrate, group=Country, colour = Country)) +
+  ggplot(aes(Year,mrate, group=Country, colour = Country)) +
     geom_point(size=2) +
     geom_line() +
-    ggtitle("Time trends of Liver Cancer on the Female population") +
     ylab("Mortality Rate") +
-    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
+    ggtitle("For the Female population")+
+    theme_dark() +
+    theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
+          legend.position = "bottom",
+          axis.title = element_text(size = 20),
+          axis.text = element_text(size =14))
 ```
 
 ---
