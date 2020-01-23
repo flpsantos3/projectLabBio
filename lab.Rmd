@@ -34,6 +34,7 @@ library(kableExtra)
 # *Objectives*
 
 The main objective is to *explore Liver and Intrahepatic Bile Ducts Cancer mortality geographical and time trends* for the following countries:
+
 + `Austria`
 
 + `Cyprus`
@@ -219,7 +220,7 @@ diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
 
 
 
-## `End of the Great Tyiding!`
+## `End of the Great Tidying!`
 
 
 # *Questions*
@@ -239,6 +240,8 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
     scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
 ```
   
+## *Interpretation*
+
   * Looking at the data for hepatic cancer mortality rate for females we can note an overall increasing trend for every country, as well as for the European Union.
   * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages, in these countries.
     + `Austria` - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2016.
@@ -256,6 +259,8 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
     ylab("Mortality Rate") +
     scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
 ```
+
+## *Interpretation*
 
   * For males, like females, there is an increase in hepatic liver mortality rate over the years.
     + An exception is Germany, showing stable values for the years 2011 and 2017.
@@ -279,6 +284,8 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     ylab("Mortality Rate")
 ```
 
+## *Interpretation*
+
   * In every country (Except in Malta which is a lot harder to describe) we see a general increase on the mortality rate as the age class increases (Starting in the 35 to 39 age class)
   * Contrary to the other countrys (which always increase), Malta mortality rate just oscilates a lot between the classes 55-60 and 85, where it ends with a 0 mortality rate
   * The firsts Age classes (until the classe 35-39) shown zero to very few mortality rate for this type of cancer on the Female population
@@ -297,6 +304,8 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     ylab("Mortality Rate") +
     scale_x_discrete(labels=data.f[,Age], breaks = data.f[,Age])
 ```
+
+## *Interpretation*
 
   * Again, in every country we see a general increase on the mortality rate as the age class increases (Starting in the 40 to 44 age class)
   * Contrary to the general trend, we see a decrease in Malta between the age classes of 50-54 and 65-69m as well as with Cyprus between 55-59 and 60-64, 60-64 and 70-74 (which stabilizes) and 80-84 and 85 where it drop to 21.72
@@ -346,7 +355,7 @@ data.diff.M %>%
 # Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
 ```
 
-
+## *Interpretation*
 
 ## `Fourth Question`
 
@@ -413,6 +422,9 @@ cancersF[order(-Deaths), head(.SD,5)]%>%
   kable(align = "cc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
+
+## *Interpretation*
+
 For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2016: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.
 
 
@@ -433,6 +445,8 @@ cancersM[order(-Deaths), head(.SD,5)] %>%
   kable(align = "cc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
+
+## *Interpretation*
 
 For males, the most common cancers remained mostly the same between the years of 2011 and 2016, the only difference being the increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer, overtaking Stomach cancer as the fifth most deadly type of cancer. The most common cancer types for both years was Trachea/Bronchus/Lungs by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
 
