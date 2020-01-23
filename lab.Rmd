@@ -65,7 +65,12 @@ popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)
 
 # *Data Limitations*
 
-By taking a quick view at the data sets we can observe that there are some missing data from some countries and for the year 2017, in specific, there are no data regarding the cancer for the countries of Portugal and Malta. 
+By taking a quick view at the data sets we can observe that there are some missing data from some countries and for the year 2017, in specific, there are no data regarding the cancer for the countries of Portugal and Malta.
+
+Also, there are some inherint limitations to the data in the sense that, the chenge restitered in the mortality rate, from year to year, may be duo to:
+  * Improvements of the detection of this kind of cancer
+  * An increase in the portion of the population being tested and diagnosed
+Even differences between countries may suffer from this limitations
 
 # *Data Tidying* 
 ## `Cancer Data`:
@@ -260,8 +265,6 @@ allCancer <- allCancer[CancerSite != "All Cancers"]
 
 allCancer
 ```
-
-## `End of the Great Tidying!`
 
 
 # *Questions*
