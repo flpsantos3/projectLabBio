@@ -18,6 +18,11 @@ output:
 
 ```{r dtStart, include=FALSE}
 knitr::opts_chunk$set(out.width = "100%", echo = TRUE)
+packages <- c("ggplot2", "here", "data.table", "unglue", "magrittr", "kableExtra")
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+  install.packages(setdiff(packages, rownames(installed.packages())))
+}
+
 library(here)
 library(data.table)
 library(unglue)
@@ -65,9 +70,7 @@ By taking a quick view at the data sets we can observe that there are some missi
 ## `Cancer Data`:
 
 ```{r cancerData, results= FALSE}
-# Colunas certas nos dados
-names(data)
-
+# Colunas certas nos dado
 cancro <- data[CancerSite %in% "Liver and Intrahepatic Bile Ducts"]
 
 
@@ -195,6 +198,27 @@ levels(data.2016$Age)
 data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 ```
 
+## `Preparing the data for the third question`:
+
+```{r}
+# For the male population
+data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
+data.diff.M[,per := ((data.diff.M$mrate - data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
+diff.M <- data.diff.M[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
+diff.Males <- dcast(diff.M, Year ~ Country, value.var = "DiffCountry" )
+
+# For the female population
+
+data.diff.F <- data.f[Year != 2017][Year != 2011 & Sex %in% "Females" & Age %in% "All"]
+data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
+diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
+diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
+
+
+```
+
+
+
 ## `End of the Great Tyiding!`
 
 
@@ -291,26 +315,12 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 ```{r percentage change table}
 # For the male population
-library(kableExtra)
-data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
-data.diff.M[,per := ((data.diff.M$mrate - data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
-diff.M <- data.diff.M[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
-diff.Males <- dcast(diff.M, Year ~ Country, value.var = "DiffCountry" )
 
 diff.Males %>%
   kable(align="cllll") %>% 
   kable_styling(bootstrap_options = "striped")
 
 # For the Female population
-
-<<<<<<< HEAD
-### Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016? 
-  - Plot and tabulate the percentage change overtime by country.
-=======
-data.diff.F <- data.f[Year != 2017][Year != 2011 & Sex %in% "Females" & Age %in% "All"]
-data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
-diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
-diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
 
 diff.Females %>%
   kable(align="cllll") %>% 
@@ -335,7 +345,7 @@ data.diff.M %>%
 
 # Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
 ```
->>>>>>> 58e38ea904e46c3db3d16aaf2423b4c8a8f00904
+
 
 
 ## `Fourth Question`
@@ -345,7 +355,6 @@ data.diff.M %>%
 As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data that we have access to. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
 
 ```{r allCancerSites, results=FALSE}
-library(kableExtra)
 # Reading all cancer data
 allCancer <- fread("CancerMortalityEU.csv",
                header = TRUE, check.names=TRUE)
