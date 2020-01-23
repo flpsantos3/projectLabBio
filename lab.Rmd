@@ -205,20 +205,61 @@ data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 # For the male population
 data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
 data.diff.M[,per := ((data.diff.M$mrate - data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
-diff.M <- data.diff.M[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
+diff.M <- data.diff.M[, DiffCountry := sprintf("%3.1f%%", per)][, .(Country, Year, DiffCountry)]
 diff.Males <- dcast(diff.M, Year ~ Country, value.var = "DiffCountry" )
 
 # For the female population
 
 data.diff.F <- data.f[Year != 2017][Year != 2011 & Sex %in% "Females" & Age %in% "All"]
 data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
-diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%% - %s", per, Country)][, .(Country, Year, DiffCountry)]
+diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%%", per)][, .(Country, Year, DiffCountry)]
 diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
-
 
 ```
 
+## `Preparing the data for the fourth question`
 
+```{r allCancerSites, results=FALSE}
+# Reading all cancer data
+allCancer <- fread("CancerMortalityEU.csv",
+               header = TRUE, check.names=TRUE)
+
+# Removing superfluous columns
+allCancer[, c("Cause", "ageStart", "ageLabel"):=NULL]
+setnames(allCancer, "ageGroup", "Age")
+
+# Converting table to long format
+allCancer <- melt(allCancer,
+                  id.vars = c("Country","Age","CancerSite"),
+                  variable.name = "Sex+Year",
+                  value.name = "Deaths")
+
+# Separating Year and Sex data
+allCancer[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
+                            "", `Sex+Year`)))]
+allCancer[, Sex:=as.character(unglue_vec(`Sex+Year`,"{x}_{y}",var="x"))]
+allCancer[, "Sex+Year":=NULL]
+setcolorder(allCancer, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+
+# Creating EU as a country
+cancerEU <- allCancer[, .(Country = "European Union", Deaths = sum(Deaths)), by = .(Year, Sex, Age, CancerSite)]
+setcolorder(cancerEU, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+allCancer <- rbind(allCancer, cancerEU)
+
+# Creating All ages rows
+allAge <- allCancer[, .(Age = "All", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, Year, Sex, CancerSite)]
+setcolorder(allAge, c("Country","Year","Sex","Age","CancerSite","Deaths"))
+allCancer <- rbind(allCancer, allAge)
+
+# Selecting the important countries
+allCancer <- allCancer[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")
+                             ][order(Year, Country)]
+
+# Removing "All Cancer" from CancerSite
+allCancer <- allCancer[CancerSite != "All Cancers"]
+
+allCancer
+```
 
 ## `End of the Great Tidying!`
 
@@ -322,88 +363,64 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 > Plot and tabulate the percentage change overtime by country.
 
-```{r percentage change table}
-# For the male population
+```{r female population}
 
-diff.Males %>%
-  kable(align="cllll") %>% 
-  kable_styling(bootstrap_options = "striped")
-
-# For the Female population
-
-diff.Females %>%
-  kable(align="cllll") %>% 
-  kable_styling(bootstrap_options = "striped")
-
-```
-
-
-```{r percentage change plots}
 # For the female population
 data.diff.F %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
     geom_point()+
-    geom_line()
+    geom_line()+
+    ggtitle("Mortalit rate when compared with 2011 for the Female popualtion")+
+    ylab("Difference in %")
+
+# For the Female population
+diff.Females %>%
+  kable(align="ccccc") %>% 
+  kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  column_spec(1, bold = T)
+```
+
+### *Interpretation*
+
+The country that changed the most, for the mortality rate for the Female popualtion, since 2011 to 2016, was Cyprus with an increase of 18.9%
+
+
+```{r Male population}
+# For the male population
+
+diff.Males %>%
+  kable(align="ccccc") %>% 
+  kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  column_spec(1, bold = T)
 
 # For the male population
 data.diff.M %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
     geom_point()+
-    geom_line()
+    geom_line()+
+    ylab("Difference in %")
 
+# This one maybe for the slides
 
+all <- rbind(diff.Females,diff.Males)
+all %>%
+  kable(align = "cccccc") %>%
+  kable_styling() %>%
+  pack_rows("Female Population", 1, 5) %>%
+  pack_rows("Male population" , 6, 10) %>%
+  column_spec(1, bold = T)
 # Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
 ```
 
-## *Interpretation*
+### *Interpretation*
+
+The conuntry that changed the most, for the mortality rate for the Male population, since 2011 to 2016, was Malta with an increase of 71.5% 
 
 ## `Fourth Question`
 
 > What are the five (5) most common cancers in 2011? in 2016 for your countries?
 
 As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data that we have access to. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
-
-```{r allCancerSites, results=FALSE}
-# Reading all cancer data
-allCancer <- fread("CancerMortalityEU.csv",
-               header = TRUE, check.names=TRUE)
-
-# Removing superfluous columns
-allCancer[, c("Cause", "ageStart", "ageLabel"):=NULL]
-setnames(allCancer, "ageGroup", "Age")
-
-# Converting table to long format
-allCancer <- melt(allCancer,
-                  id.vars = c("Country","Age","CancerSite"),
-                  variable.name = "Sex+Year",
-                  value.name = "Deaths")
-
-# Separating Year and Sex data
-allCancer[, `:=` (Year=as.numeric(gsub("[^[:digit:].]",
-                            "", `Sex+Year`)))]
-allCancer[, Sex:=as.character(unglue_vec(`Sex+Year`,"{x}_{y}",var="x"))]
-allCancer[, "Sex+Year":=NULL]
-setcolorder(allCancer, c("Country","Year","Sex","Age","CancerSite","Deaths"))
-
-# Creating EU as a country
-cancerEU <- allCancer[, .(Country = "European Union", Deaths = sum(Deaths)), by = .(Year, Sex, Age, CancerSite)]
-setcolorder(cancerEU, c("Country","Year","Sex","Age","CancerSite","Deaths"))
-allCancer <- rbind(allCancer, cancerEU)
-
-# Creating All ages rows
-allAge <- allCancer[, .(Age = "All", Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, Year, Sex, CancerSite)]
-setcolorder(allAge, c("Country","Year","Sex","Age","CancerSite","Deaths"))
-allCancer <- rbind(allCancer, allAge)
-
-# Selecting the important countries
-allCancer <- allCancer[Country %in% c("Austria", "Cyprus", "Germany", "Malta", "Portugal", "European Union")
-                             ][order(Year, Country)]
-
-# Removing "All Cancer" from CancerSite
-allCancer <- allCancer[CancerSite != "All Cancers"]
-
-allCancer
-```
 
 ```{r cancersF11}
 #Selecting cancer data for 2011
