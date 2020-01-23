@@ -76,20 +76,13 @@ Even differences between countries may suffer from this limitations
 ## `Cancer Data`:
 
 ```{r cancerData, results= FALSE}
-# Colunas certas nos dado
+# Removing unnecessary columns
 cancro <- data[CancerSite %in% "Liver and Intrahepatic Bile Ducts"]
 
-
-str(cancro)
-cancro[, .N, by="CancerSite"] #Pode-se tirar esta coluna
-cancro[, .N, by="Cause"] #Pode-se tirar esta coluna mas a ver se não se perde a informação
-cancro[, .N, by="ageStart"] #Acho que se pode tirar também
-cancro[, .N, by="ageLabel"] #Também acho que se pode tirar se bem que esta pode ser util à frente
 cancro[, c("CancerSite", "Cause", "ageStart", "ageLabel"):=NULL]
 setnames(cancro, "ageGroup", "Age")
 
-
-# melt dos dados do cancro
+# Melt of tha cancer data
 
 cancer.new <- melt(cancro,
                    id.vars = c("Country","Age"),
@@ -106,7 +99,7 @@ cancer.new[, .N, by="Sex"]
 cancer.new[, all:=NULL]
 setcolorder(cancer.new, c("Country","Age","Sex","Year","Deaths"))
 
-# remoção de linhas com valores NA para cálculo correto do índice mortalidade
+#Removing Na
 cancer.new <- na.omit(cancer.new)
 
 # Criação do EU
@@ -403,16 +396,6 @@ data.diff.M %>%
     geom_line()+
     ylab("Difference in %")
 
-# This one maybe for the slides
-
-all <- rbind(diff.Females,diff.Males)
-all %>%
-  kable(align = "cccccc") %>%
-  kable_styling() %>%
-  pack_rows("Female Population", 1, 5) %>%
-  pack_rows("Male population" , 6, 10) %>%
-  column_spec(1, bold = T)
-# Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
 ```
 
 ### *Interpretation*
