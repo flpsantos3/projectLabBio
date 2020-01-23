@@ -406,8 +406,6 @@ The conuntry that changed the most, for the mortality rate for the Male populati
 
 > What are the five (5) most common cancers in 2011? in 2016 for your countries?
 
-As we only have access to mortality data there is no way to know if the most common cancer types are the same as the most deadly. There could be cases where an individual gets cancer and recovers, and those are not reported in the data that we have access to. To answer this question we will work with the data we have and assume that the deadliest cancers are representative of the most common cancer types.
-
 ```{r cancersF11}
 #Selecting cancer data for 2011
 cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]

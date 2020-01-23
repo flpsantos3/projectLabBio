@@ -36,7 +36,7 @@ class: title-slide
 # Liver and Intrahepatic Bile Duct Cancer
 ## Mortality in European Countries 
 ### Carolina Santos, Filipe Santos & Hugo Anjos 
-#### Universtity of Lisbon, Faculty of Sciences 
+#### University of Lisbon, Faculty of Sciences 
 ##### Laboratory of Biostatistics 2019/2020
 ---
 class: intro-slide, left
@@ -279,46 +279,58 @@ allCancer <- allCancer[CancerSite != "All Cancers"]
 allCancer
 ```
 
-```{r q4 females2011, echo=FALSE, fig.align="center"}
+```{r q4 females2011, include=FALSE, fig.align="center"}
 library(kableExtra)
 cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersF[order(-Deaths), head(.SD,5)]%>% 
-  kable(align = "cc")%>% 
+cancersF11 <- cancersF[order(-Deaths), head(.SD,5)] 
+kable(cancersF11, align = "lc")%>% 
   kable_styling(bootstrap_options = c("hover", "stripped"), full_width = F)
-
 ```
 
-```{r q4 females2016,echo=FALSE, fig.align="center"}
+```{r q4 females2016, include=FALSE, fig.align="center"}
 library(kableExtra)
 cancersF <- allCancer[Sex=="Females"][Year=="2016"][Age=="All"][order(CancerSite)]
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersF[order(-Deaths), head(.SD,5)]%>% 
-  kable(align = "rc")%>% 
-  kable_styling(bootstrap_options = "striped")
+cancersF16 <- cancersF[order(-Deaths), head(.SD,5)]
+kable(cancersF16, align = "lc")%>% 
+  kable_styling(bootstrap_options = c("hover", "stripped"), full_width = F)
 ```
 
+```{r fData, echo= FALSE}
+allCF <- cbind(cancersF11, cancersF16)
+kable(allCF, format = "html", align="lclc") %>%
+  kable_styling(bootstrap_options = "striped") %>%
+  add_header_above(c("2011" = 2, "2016" = 2))
+```
 ---
 class: eleventh-slide
 
 ## Most common cancers for men in 2011 and 2016
-```{r q4 males2011, echo=FALSE, fig.align="center"}
+```{r q4 males2011, include=FALSE, fig.align="center"}
 library(kableExtra)
 cancersM <- allCancer[Sex=="Males"][Year=="2011"][Age=="All"][order(CancerSite)]
 cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersM[order(-Deaths), head(.SD,5)]%>% 
-  kable(align = "rc")%>% 
+cancersM11 <- cancersM[order(-Deaths), head(.SD,5)]
+kable(cancersM11, align = "rc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
 
 
-```{r q4 males2016, echo=FALSE, fig.align="center"}
+```{r q4 males2016, include=FALSE, fig.align="center"}
 library(kableExtra)
 cancersM <- allCancer[Sex=="Males"][Year=="2016"][Age=="All"][order(CancerSite)]
 cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersM[order(-Deaths), head(.SD,5)] %>%
-  kable(align = "rc")%>% 
+cancersM16 <- cancersM[order(-Deaths), head(.SD,5)]
+kable(cancersM16, align = "rc")%>% 
   kable_styling(bootstrap_options = "striped")
+```
+
+```{r mData, echo= FALSE}
+allCF <- cbind(cancersM11, cancersM16)
+kable(allCF, format = "html", align="lclc") %>%
+  kable_styling(bootstrap_options = "striped") %>%
+  add_header_above(c("2011" = 2, "2016" = 2))
 ```
 
 ---
