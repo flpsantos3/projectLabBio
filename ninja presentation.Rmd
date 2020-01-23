@@ -22,6 +22,10 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
+packages <- c("ggplot2", "here", "data.table", "unglue", "magrittr", "kableExtra", "dplyr", "xaringan")
+if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
+  install.packages(setdiff(packages, rownames(installed.packages())))
+}
 ```
 
 class: title-slide   
@@ -137,8 +141,8 @@ data.f
 ```{r q1 females, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
 data.f[Age %in% "All"][Sex %in% "Females"] %>% 
   ggplot(aes(Year,mrate, group=Country, colour = Country)) +
-    geom_point(size=2) +
-    geom_line() +
+    geom_point(size=3) +
+    geom_line(size=1.5) +
     ylab("Mortality Rate") +
     scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
     ggtitle("For the Female population")+
@@ -146,7 +150,9 @@ data.f[Age %in% "All"][Sex %in% "Females"] %>%
     theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
           legend.position = "bottom",
           axis.title = element_text(size = 20),
-          axis.text = element_text(size =14))
+          axis.text = element_text(size =14),
+          legend.text = element_text(size=12),
+          legend.title = element_text(size = 14))
 ```
 
 ---
@@ -180,11 +186,18 @@ data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 ```{r q2 females, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
 data.2016[Sex %in% "Females"][Age != "All"] %>%
 ggplot(aes(Age,mrate, group=Country, colour=Country))+
-    geom_point()+
-    geom_line()+
-    theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
+    geom_point(size=3)+
+    geom_line(size=1.3)+
     ggtitle("Mortlity rate per Age group in 2016 on the Female population")+
-    ylab("Mortality Rate")
+    ylab("Mortality Rate")+
+    theme_dark()+
+    theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
+          legend.position = "bottom",
+          axis.title = element_text(size = 20),
+          axis.text = element_text(size =14),
+          legend.text = element_text(size=12),
+          legend.title = element_text(size = 14), 
+          axis.text.x = element_text(angle=45, vjust = 0.5))
 ```
 
 ---
@@ -271,8 +284,9 @@ library(kableExtra)
 cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]
 cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
 cancersF[order(-Deaths), head(.SD,5)]%>% 
-  kable(align = "rc")%>% 
-  kable_styling(bootstrap_options = "striped")
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = c("hover", "stripped"), full_width = F)
+
 ```
 
 ```{r q4 females2016,echo=FALSE, fig.align="center"}
