@@ -41,7 +41,9 @@ class: title-slide
 ---
 class: intro-slide
 
+.center[
 # Introduction 
+]
 
 ## Selected Countries & Cancer Site
 * Austria, Cyprus, Germany, Malta, Portugal and European Union
@@ -151,10 +153,12 @@ data.f[Age %in% "All"] %>%
         axis.title = element_text(size = 20),
         axis.text = element_text(size =14),
         legend.text = element_text(size=12),
-        legend.title = element_text(size = 14))+
+        legend.title = element_text(size = 14),
+        axis.text.x = element_text(angle=45, vjust = 0.5))+
   scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))+
   theme(strip.text = element_text(size = 18))+
-  facet_wrap(~Sex)
+  facet_wrap(~Sex)+
+  scale_y_continuous(sec.axis = dup_axis(breaks = c(5,10,15)))
 ```
 
 * Overall **increasing trend** for every country & values for mortality for men are **higher than** those of **females**.
@@ -217,7 +221,7 @@ data.2016[Sex %in% "Males"][Age != "All"] %>%
 * Mortality rate is **higher for the Male population** & **Older population** is more **susceptible** to die due to this kind of cancer
 
 ---
-class: sixth-slide
+class: sixth-slide, middle
 
 .center[
 ## Changes in percentage terms between 2011 and 2016
@@ -260,8 +264,7 @@ class: seventh-slide, center
 
 ## Changes in percentage terms between 2011 and 2016 
 
-```{r female population.ex3, echo=FALSE, fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
-# For the female population
+```{r ex3, echo=FALSE, fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
 data.all <- rbind(data.diff.F, data.diff.M)
 data.all %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
@@ -278,16 +281,17 @@ data.all %>%
         legend.title = element_text(size = 14), 
         axis.text.x = element_text(angle=45, vjust = 0.5))+
     theme(strip.text = element_text(size = 18))+
-    facet_wrap(~Sex)
+    facet_wrap(~Sex)+
+    theme(strip.text = element_text(size = 18))+
+    scale_y_continuous(sec.axis = dup_axis(breaks = c(-25,0,25,50,75)))
 ```
 
- * **Portugal, European Union and Germany** display **stable** values along the years & **Cyprus, Austria and Malta** show a very **irregular trend** throughout the years
-
- * A general **stabilization** across the years **except for Malta** (Which has a **75% increase** in the mortality rate, from 2011 to 2016)
-
 ---
-class: eighth-slide
+class: eighth-slide, middle
+
+.center[
 ## Most common cancers for Females in 2011 and 2016
+]
 
 ```{r data.ex4, include=FALSE}
 library(kableExtra)
@@ -369,9 +373,12 @@ knitr::kable(allCF, format = "html", align="cccc") %>%
  * **Decreases:** Colon and Ovary
  
 ---
-class: ninth-slide
+class: ninth-slide, middle
 
+.center[
 ## Most common cancers for Males in 2011 and 2016
+]
+
 ```{r q4 males2011, include=FALSE, fig.align="center"}
 library(kableExtra)
 cancersM <- allCancer[Sex=="Males"][Year=="2011"][Age=="All"][order(CancerSite)]
@@ -390,6 +397,7 @@ kable(cancersM16, align = "rc")%>%
   kable_styling(bootstrap_options = "striped")
 ```
 
+
 ```{r mData, echo= FALSE}
 allCM <- cbind(cancersM11, cancersM16)
 allCM <- allCM[,c(1,2,4,3)]
@@ -401,6 +409,7 @@ knitr::kable(allCM, format = "html", align="cccc") %>%
   row_spec(c(2,4), background = "Linen") %>%
   add_header_above(c("2011" = 2, "2016" = 2), background="white")
 ```
+
 
  * Only change is **Liver over Stomach**
  
