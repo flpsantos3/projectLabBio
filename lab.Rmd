@@ -212,13 +212,13 @@ diff.Males <- dcast(diff.M, Year ~ Country, value.var = "DiffCountry" )
 # For the female population
 
 data.diff.F <- data.f[Year != 2017][Year != 2011 & Sex %in% "Females" & Age %in% "All"]
-data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
+data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate*100)]
 diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%%", per)][, .(Country, Year, DiffCountry)]
 diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
 
 ```
 
-## `Preparing the data for the fourth question`
+## `Preparing the data for the fourth question`:
 
 ```{r allCancerSites, results=FALSE}
 # Reading all cancer data
@@ -320,7 +320,7 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_point()+
     geom_line()+
     theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
-    ggtitle("Mortlity rate per Age group in 2016 on the Female population")+
+    ggtitle("Mortlity rate per Age group in 2016 for the Female population")+
     ylab("Mortality Rate")
 ```
 
@@ -340,7 +340,7 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_point()+
     geom_line()+
     theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
-    ggtitle("Mortlity rate per Age group in 2016 on the Male population")+
+    ggtitle("Mortlity rate per Age group in 2016 for the Male population")+
     ylab("Mortality Rate") +
     scale_x_discrete(labels=data.f[,Age], breaks = data.f[,Age])
 ```
@@ -369,7 +369,7 @@ data.diff.F %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
     geom_point()+
     geom_line()+
-    ggtitle("Mortalit rate when compared with 2011 for the Female popualtion")+
+    ggtitle("Mortality rate when compared with 2011 for the Female population")+
     ylab("Difference in %")
 
 # For the Female population
@@ -381,7 +381,7 @@ diff.Females %>%
 
 ### *Interpretation*
 
-The country that changed the most, for the mortality rate for the Female popualtion, since 2011 to 2016, was Cyprus with an increase of 18.9%
+The country that changed the most, in the mortality rate for the Female population, since 2011 to 2016, was Cyprus with an increase of 29.9%
 
 
 ```{r Male population}
@@ -403,7 +403,7 @@ data.diff.M %>%
 
 ### *Interpretation*
 
-The country that changed the most, for the mortality rate for the Male population, since 2011 to 2016, was Malta with an increase of 71.5% 
+The country that changed the most, in the mortality rate for the Male population, since 2011 to 2016, was Malta with an increase of 71.5% 
 
 ## `Fourth Question`
 
