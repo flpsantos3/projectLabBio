@@ -2,7 +2,7 @@
 * Liver and Intrahepatic Bile Ducts Cancer in European Countries. 
 
 <div>
-<img src="preview2.png">
+<img src="preview.png">
 </div>
 
 ## Objectives
