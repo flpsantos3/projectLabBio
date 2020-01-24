@@ -65,15 +65,15 @@ popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)
 
 # *Data Limitations*
 
-By taking a quick look at the data sets we can observe that there are some missing data from some countries and for the year 2017, in specific, there are no data regarding the cancer for the countries of Portugal and Malta.
+By taking a quick look at the data sets we can observe that there is some missing data for some countries and for the year 2017, in specific, there is no data regarding the cancer for the countries of Portugal and Malta.
 
-Also, there are some inherent limitations to the data in the sense that, the change registered in the mortality rate, from year to year, may be duo to:
+Also, there are some inherent limitations to the data in the sense that, the change registered in the mortality rate, from year to year, may be due to:
 
-* Improvements of the detection of this kind of cancer
+* Improvements to the detection methods for this kind of cancer
 
 * An increase in the portion of the population being tested and diagnosed
 
-* Even differences between countries may suffer from this limitations
+Differences between countries might bue due to these limitations.
 
 # *Data Tidying* 
 ## `Cancer Data`:
@@ -295,13 +295,13 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
   
 ## *Interpretation*
 
-  * Looking at the data for hepatic cancer mortality rate for females we can note an overall increasing trend for every country, as well as for the European Union.
-  * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages, in these countries.
-    + `Austria` - with increases and decreases over the years, the mortality rate has been relatively stable, comparing 2011 data to 2016.
+  * There is an overall increasing trend for every country, as well as for the European Union.
+  * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages in these countries.
+    + `Austria` - with increases and decreases over the years, the mortality rate has been relatively stable, from 2011 to 2016.
     + `Malta` - an increase from 2011 (below 3) to 2016 (3,5), with a max in the year 2014. However, it remains one of the countries with the lowest mortality rate.
     + `Cyprus` - overall increase, with mortality peaks in 2013 and 2016.
   * Portugal, Germany and EU show an overall increase, with Portugal's mortality rate increasing the most among them (5.2 to 6).
-  * These five countries show lower mortality rates than the European Union for every year, except for Austria in 2012 and 2014.
+  * These five countries show lower mortality rates than the European Union for every year, except Austria in 2012 and 2014.
 
 ```{r Time trends for males}
 data.f[Age %in% "All"][Sex %in% "Males"] %>% 
@@ -341,12 +341,12 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 ## *Interpretation*
 
-  * In every country (Except in Malta which is a lot harder to describe) we see a general increase on the mortality rate as the age class increases (Starting in the 35 to 39 age class)
-  * Contrary to the other countrys (which always increase), Malta mortality rate just oscilates a lot between the classes 55-60 and 85, where it ends with a 0 mortality rate
-  * The firsts Age classes (until the classe 35-39) shown zero to very few mortality rate for this type of cancer on the Female population
-  * The trend observed here is that older population (From the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, in general, Germany, Austria, Portugal, Malta and Cyprus have a lower mortality rate when compared to the mortatity rate of the European Union
-    + Malta only have a higher mortatlity rate than the European Union in the classes of 60-64 and 80-84
-    + Cyprus only have a higher mortality rate than the European Union in the classes of 50-54, 65-69, 80-84 and 85
+  * In every country (except in Malta which is a lot harder to describe) we see a general increase on the mortality rate as the age class increases (starting in the 35 to 39 age class)
+  * Contrary to the other countries (which always increase), Malta's mortality rate oscilates a lot between the classes 55-60 and 85, where it ends with a 0 mortality rate
+  * The first Age classes (until the 35-39 age class) show zero to low mortality rate for this type of cancer on the Female population
+  * The trend observed here is that the older population (from the age of 50 foward) is more susceptible to die due to this kind of cance. Germany, Austria, Portugal, Malta and Cyprus have a lower mortality rate when compared to the mortality rate of the European Union
+    + Malta only has a higher mortatlity rate than the European Union in the classes of 60-64 and 80-84
+    + Cyprus only has a higher mortality rate than the European Union in the classes of 50-54, 65-69, 80-84 and 85
 
 
 ```{r ageMR_Males}
@@ -363,14 +363,14 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
 
 ## *Interpretation*
 
-  * Again, in every country we see a general increase on the mortality rate as the age class increases (Starting in the 40 to 44 age class)
+  * Again, in every country we see a general increase on the mortality rate as the age class increases (starting in the 40 to 44 age class)
   * Contrary to the general trend, we see a decrease in Malta between the age classes of 50-54 and 65-69m as well as with Cyprus between 55-59 and 60-64, 60-64 and 70-74 (which stabilizes) and 80-84 and 85 where it drop to 21.72
-  * As well as with the female population, the firsts Age classes (until the class 40-44) shown zero to very few mortality rate for this type of cancer on the Female population
-  * Again, trend observed here is that older population (From the age of 50 foward) is more susceptible to die due to this kind of cancer and, in this danger group, in general, Germany, Austria, Portugal and Cyprus have a lower mortality rate when compared to the mortatity rate of the European Union, while Malta as ganneraly a higher mortality rate than the European Union
-    + However, Portugal as a higher moratlity rate, when compared to the European Union, between the age classes of 50-54 to 65-69
-    + Austria also shows a higher moralitu rate than European Union between the age classes of 60-64 to 75-79 
-    + Inversily, Malta only shows a mortality rate lower than the European Union in the age classes of 60-64 and 65-69
-  * In general, the mortality rate of this type of cancer is higher in the Male population than on the Female population, at least, in the conuntrys here analyse
+  * As well as with the female population, the first Age classes (until the class 40-44) show zero to very few mortality rate for this type of cancer on the Female population
+  * Again, there is a trend for older people (from the age of 50 forward) to be more susceptible to die due to this kind of cancer. Germany, Austria, Portugal and Cyprus have a lower mortality rate than the European Union, while Malta has a higher mortality rate
+    + However, Portugal has a higher mortality rate, when compared to the European Union, between the age classes of 50-54 to 65-69
+    + Austria also shows a higher mortality rate than the European Union between the age classes of 60-64 to 75-79 
+    + On the other hand, Malta only shows a mortality rate lower than the European Union in the age classes of 60-64 and 65-69
+  * In general, the mortality rate for this type of cancer is higher in the Male population than on the Female population, for the countries chosen for analysis
 
 ## `Third Question`
 
@@ -398,7 +398,7 @@ diff.Females %>%
 
 ### *Interpretation*
 
-The country that changed the most, in the mortality rate for the Female population, since 2011 to 2016, was Cyprus with an increase of 29.9%
+The country that changed the most in mortality rate for the Female population, from 2011 to 2016, was Cyprus with an increase of 29.9%
 
 
 ```{r Male population}
@@ -421,7 +421,7 @@ data.diff.M %>%
 
 ### *Interpretation*
 
-The country that changed the most, in the mortality rate for the Male population, since 2011 to 2016, was Malta with an increase of 71.5% 
+The country that changed the most in mortality rate for the Male population, from 2011 to 2016, was Malta with an increase of 71.5% 
 
 ## `Fourth Question`
 
@@ -470,13 +470,17 @@ cancersM[order(-Deaths), head(.SD,5)] %>%
 
 ## *Interpretation*
 
-For males, the most common cancers remained mostly the same between the years of 2011 and 2016, the only difference being the increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer, overtaking Stomach cancer as the fifth most deadly type of cancer. The most common cancer types for both years was Trachea/Bronchus/Lungs by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
+For males, the most common cancers remained mostly the same between the years of 2011 and 2016, the only difference being the increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer, overtaking Stomach cancer as the fifth most deadly type of cancer. The most common cancer cause of death for both years was Trachea/Bronchus/Lungs by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
 
 # *Conclusion*:
 
-  * In conclusion, this data shows a general stabilization in the mortality rate from cancer in the Liver and Intrahepatic Bile Ducts (from 2011 to 2016). 2017 is a lot more difficult to see given we have a lot of missing data.
+  * This data shows a general stabilization in the mortality rate Liver and Intrahepatic Bile Ducts cancer (from 2011 to 2016)
+  
+  * Lack of data for 2017 makes this analysis more difficult
 
   * The data also shows that this cancer is more agressive to older people, whit higher mortality rates
+  
+  * Most common cancers are (almost) the same from 2011 to 2016. There is a slight overall trend for the number of deaths to increase
   
   * Given the data limitations, the true mortality rate may be higher
 

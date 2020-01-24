@@ -20,7 +20,7 @@ We will be using two data sets, given to us by Professors Saghir Bashir and Mar�
 + `PopulationEU.csv`- number of people by country, year, age group and sex 
 
 ## Questions
-The countries we will be analysing are: `Austria, Cyprus, Germany, Portugal, Malta and the European Union`. For each question we will treat males and females separately.
+The countries we will be analysing are: `Austria`, `Cyprus`, `Germany`, `Portugal`, `Malta` and the `European Union`. For each question we will treat males and females separately.
 
 + What are the time trends in the mortality rates between countries for all age groups combines? How do they compare with the European Union overall?
 
@@ -32,7 +32,9 @@ The countries we will be analysing are: `Austria, Cyprus, Germany, Portugal, Mal
 
 ## Acknowledgements
 
-We would like to thank Professors Saghir Bashir and Marília Antunes for their availability to answer all our doubts and questions and for everything we learned from them this semester. A special thanks to everyone who shares their knowledge in coding online since it was very helpful for us to do some parts of this assessment, specially the presentation using the xaringan package. 
+We would like to thank Professors [Saghir Bashir](https://github.com/saghirb) and Marília Antunes for their availability to answer all our doubts and questions and for everything we learned from them this semester. 
+
+A special thanks to everyone who shares their knowledge in coding online since it was very helpful for us to do some parts of this assessment, specially the presentation using the `xaringan` package. 
 
 
 
