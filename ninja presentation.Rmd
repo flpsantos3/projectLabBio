@@ -26,6 +26,15 @@ packages <- c("ggplot2", "here", "data.table", "unglue", "magrittr", "kableExtra
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))
 }
+library(here)
+library(data.table)
+library(unglue)
+library(ggplot2)
+library(magrittr)
+library(kableExtra)
+library(gganimate)
+library(gifski)
+library(png)
 ```
 
 class: title-slide
@@ -45,7 +54,7 @@ class: intro-slide
 
 ## Objective:
 
-* Explore **Liver and Intrahepatic Bile Ducts Cancer mortality** in 5 European countries and the European Union
+* Explore **Liver and Intrahepatic Bile Ducts Cancer mortality** 
  
 ## Selected Countries:
 
@@ -56,7 +65,7 @@ class: intro-slide
 <img src="bileductcancer.png" border="3" alt="drawing" width="400" height="250" /> 
 ]
 
-### Image from: https://www.medindia.net/patients/patientinfo/bile-duct-cancer.htm
+### Image from: [medindia.net](https://www.medindia.net/patients/patientinfo/bile-duct-cancer.htm)
 
 ---
 class: third-slide, center, middle
@@ -429,7 +438,7 @@ class: middle, conclusion-slide
 ]
 
 
- * Data shows an overall **stabilization in the mortality rate** from Liver and Intrahepatic Bile Ducts cancer (2011 to 2016).
+ * Data shows an overall **slight increase in the mortality rate** for Liver and Intrahepatic Bile Ducts cancer (2011 to 2016).
  
  * Data also shows that this cancer is **more aggressive to older people**, showing higher mortality rates
  
@@ -439,4 +448,28 @@ class: middle, conclusion-slide
  
  * Given the data limitations, the **true mortality rate might be higher**
 
+---
 
+```{r ggA1, echo=FALSE}
+data.f$Year <- as.integer(data.f$Year)
+p <-data.f[mrate != "NA"] %>%
+  ggplot(aes(Age, mrate, group= Sex, colour= Sex))+
+    geom_point()+
+    facet_wrap(~Country)
+
+p +transition_time(Year)+
+  labs(title = "Year: {frame_time}")
+```
+
+---
+
+```{r ggA2, echo=FALSE}
+data.f$Sex <- as.factor(data.f$Sex)
+f <- data.f[mrate != "NA"][Age %in% "All"] %>%
+      ggplot(aes(Year, mrate, colour= Country, group = Country ))+
+        geom_line()+
+        theme(legend.position = "bottom")
+
+f+transition_reveal(Year)+
+  facet_wrap(~Sex)
+```

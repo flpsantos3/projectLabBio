@@ -127,7 +127,7 @@ cancer.liver
 
 ## `Population Data`:
 
-```{r dtPop, results= FALSE}
+```{r dtPop, results= FALSE, warning=FALSE}
 # Importing data
 library(data.table)
 popdt <- fread("PopulationEU.csv",
@@ -184,7 +184,7 @@ popF
 
 ## `Merging the two data sets`:
 
-```{r final data set}
+```{r final data set, results=FALSE}
 data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
 data.f[, mrate := round(100000*Deaths/Population,2)]
 data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Country]
@@ -193,7 +193,7 @@ data.f
 
 ## `Preparing the Data for the second question`:
 
-```{r data.ex2}
+```{r data.ex2, results=FALSE}
 data.2016 <- data.f[Year %in% "2016"][Deaths != "NA"]
 data.2016$Age <- as.factor(data.2016$Age)
 levels(data.2016$Age)
@@ -202,7 +202,7 @@ data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 
 ## `Preparing the data for the third question`:
 
-```{r}
+```{r dataEx3, results=FALSE}
 # For the male population
 data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
 data.diff.M[,per := ((data.diff.M$mrate - data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
@@ -270,7 +270,7 @@ allCancer
 
 >How do they compare with the European Union overall?
 
-```{r Time trends for females}
+```{r Time trends for females, warning=FALSE, results=FALSE}
 p <- data.f[Age %in% "All"][Sex %in% "Females"][Country != "Germany"] %>% 
 ggplot(aes(Year,mrate, group=Country, colour = Country)) +
     geom_point(size=2) +
@@ -303,7 +303,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
   * Portugal, Germany and EU show an overall increase, with Portugal's mortality rate increasing the most among them (5.2 to 6).
   * These five countries show lower mortality rates than the European Union for every year, except Austria in 2012 and 2014.
 
-```{r Time trends for males}
+```{r Time trends for males, warning=FALSE}
 data.f[Age %in% "All"][Sex %in% "Males"] %>% 
 ggplot(aes(Year,mrate, group=Country, colour = Country))+
     geom_point(size=2)+
@@ -447,7 +447,7 @@ cancersF[order(-Deaths), head(.SD,5)]%>%
 
 ## *Interpretation*
 
-For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the 5 most common cancer types were the same in 2011 and 2016: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.
+For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the **5 most common cancer types were the same in 2011 and 2016: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary**. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.
 
 
 ```{r cancersM11}
@@ -470,19 +470,19 @@ cancersM[order(-Deaths), head(.SD,5)] %>%
 
 ## *Interpretation*
 
-For males, the most common cancers remained mostly the same between the years of 2011 and 2016, the only difference being the increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer, overtaking Stomach cancer as the fifth most deadly type of cancer. The most common cancer cause of death for both years was Trachea/Bronchus/Lungs by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
+For males, the **most common cancers remained mostly the same** between the years of 2011 and 2016, the only difference being the **increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer**, overtaking Stomach cancer as the fifth most deadly type of cancer. The **most common cancer** cause of death for both years was **Trachea/Bronchus/Lungs** by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
 
-# *Conclusion*:
+# *Conclusions*:
 
-  * This data shows a general stabilization in the mortality rate Liver and Intrahepatic Bile Ducts cancer (from 2011 to 2016)
+ * This data shows an **overall slight increase in the mortality rate for Liver and Intrahepatic Bile Ducts cancer** (from 2011 to 2016)
   
-  * Lack of data for 2017 makes this analysis more difficult
-
-  * The data also shows that this cancer is more agressive to older people, whit higher mortality rates
+ * **Lack of data for 2017** makes this analysis more difficult
   
-  * Most common cancers are (almost) the same from 2011 to 2016. There is a slight overall trend for the number of deaths to increase
+ * The data also shows that this cancer is more aggressive to older people, showing **higher mortality rates for higher age groups**.
   
-  * Given the data limitations, the true mortality rate may be higher
+ * **Most common cancers are** (almost) **the same** from 2011 to 2016. There is a slight overall trend for the number of deaths to increase
+  
+ * Given the data limitations, the **true mortality rate may be higher**
 
 ```{r sessionInfo, echo=TRUE}
 sessionInfo()
