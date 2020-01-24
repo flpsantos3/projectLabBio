@@ -289,7 +289,7 @@ class: eighth-slide, center
 
 ## Changes in percentage terms between 2011 and 2016 
 
-```{r female population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
+```{r female population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
 # For the female population
 data.diff.F %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
@@ -315,7 +315,7 @@ data.diff.F %>%
 class: ninth-slide, center
 
 ## Changes in percentage terms between 2011 and 2016 
-```{r Male population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
+```{r Male population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
 # For the male population
 data.diff.M %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
