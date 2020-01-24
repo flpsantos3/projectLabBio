@@ -41,7 +41,7 @@ class: title-slide
 
 <img src="fcullogo.png" alt="drawing" width="250"/>
 
-# Liver and Intrahepatic Bile Duct Cancer
+# Liver and Intrahepatic Bile Ducts Cancer
 ## Mortality in European Countries 
 ### **Carolina Santos**, **Filipe Santos** & **Hugo Anjos** 
 #### University of Lisbon, Faculty of Sciences
@@ -430,14 +430,23 @@ knitr::kable(allCM, format = "html", align="cccc") %>%
  * **Trachea/Bronchus/Lungs** is the **deadliest** by a large margin
  
  * Most **cancers increase** in number of deaths
-
+ 
 ---
-class: tenth-slide, middle
+class: conclusion-slide, middle
 
 .center[
-## Mortality rate per sex over the years, for all age groups
+## Conclusions
 ]
-```{r ggA2, echo=FALSE,  fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
+
+* Data shows an overall **slight increase in the mortality rate** for Liver and Intrahepatic Bile Ducts cancer (2011 to 2016).
+ 
+* Data also shows that this cancer is **more aggressive to older people**, showing higher mortality rates
+ 
+* **Most common cancers** are (almost) the **same** from 2011 to 2016.
+ 
+* **Lack of data for 2017** makes this analysis more difficult & given the data limitations, the **true mortality rate might be higher**
+
+```{r ggA2, echo=FALSE,  fig.align="center", fig.width=6, fig.height=4, warning=FALSE}
 data.f$Sex <- as.factor(data.f$Sex)
 f <- data.f[mrate != "NA"][Age %in% "All"] %>%
   ggplot(aes(Year, mrate, colour= Country, group = Country ))+
@@ -457,20 +466,3 @@ f <- data.f[mrate != "NA"][Age %in% "All"] %>%
 f+transition_reveal(Year)+
   facet_wrap(~Sex)
 ```
- 
----
-class: conclusion-slide, middle
-
-.center[
-## Conclusions
-]
-
-* Data shows an overall **slight increase in the mortality rate** for Liver and Intrahepatic Bile Ducts cancer (2011 to 2016).
- 
-* Data also shows that this cancer is **more aggressive to older people**, showing higher mortality rates
- 
-* **Most common cancers** are (almost) the **same** from 2011 to 2016.
- 
-* **Lack of data for 2017** makes this analysis more difficult
- 
-* Given the data limitations, the **true mortality rate might be higher**
