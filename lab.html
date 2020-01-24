@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -1475,7 +1476,6 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
-  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -1504,12 +1504,6 @@ summary {
 }
 }
 
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
 
 .toc-content {
   padding-left: 30px;
@@ -2384,7 +2378,7 @@ Ovary
 </div>
 <div id="interpretation-6" class="section level2">
 <h2><em>Interpretation</em></h2>
-<p>For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the <strong>5 most common cancer types were the same in 2011 and 2016</strong>: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.</p>
+<p>For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the <strong>5 most common cancer types were the same in 2011 and 2016: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary</strong>. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="co">#Selecting cancer data for 2011</span></a>
 <a class="sourceLine" id="cb18-2" title="2">cancersM &lt;-<span class="st"> </span>allCancer[Sex<span class="op">==</span><span class="st">&quot;Males&quot;</span>][Year<span class="op">==</span><span class="st">&quot;2011&quot;</span>][Age<span class="op">==</span><span class="st">&quot;All&quot;</span>][<span class="kw">order</span>(CancerSite)]</a>
 <a class="sourceLine" id="cb18-3" title="3">cancersM &lt;-<span class="st"> </span>cancersM[, .(<span class="dt">Deaths =</span> <span class="kw">sum</span>(Deaths, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)), by =<span class="st"> </span>.(CancerSite)]</a>
@@ -2521,15 +2515,17 @@ Liver and Intrahepatic Bile Ducts
 <li><p>Given the data limitations, the <strong>true mortality rate may be higher</strong></p></li>
 </ul>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
-<pre><code>## R version 3.6.2 (2019-12-12)
+<pre><code>## R version 3.6.1 (2019-07-05)
 ## Platform: x86_64-w64-mingw32/x64 (64-bit)
 ## Running under: Windows 10 x64 (build 18362)
 ## 
 ## Matrix products: default
 ## 
 ## locale:
-## [1] LC_COLLATE=Portuguese_Portugal.1252  LC_CTYPE=Portuguese_Portugal.1252   
-## [3] LC_MONETARY=Portuguese_Portugal.1252 LC_NUMERIC=C                        
+## [1] LC_COLLATE=Portuguese_Portugal.1252 
+## [2] LC_CTYPE=Portuguese_Portugal.1252   
+## [3] LC_MONETARY=Portuguese_Portugal.1252
+## [4] LC_NUMERIC=C                        
 ## [5] LC_TIME=Portuguese_Portugal.1252    
 ## 
 ## attached base packages:
@@ -2537,21 +2533,24 @@ Liver and Intrahepatic Bile Ducts
 ## 
 ## other attached packages:
 ## [1] kableExtra_1.1.0  magrittr_1.5      ggplot2_3.2.1     unglue_0.0.1     
-## [5] data.table_1.12.8 here_0.1         
+## [5] data.table_1.12.2 here_0.1         
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.3        highr_0.8         compiler_3.6.2    pillar_1.4.3     
-##  [5] tools_3.6.2       zeallot_0.1.0     digest_0.6.23     viridisLite_0.3.0
-##  [9] evaluate_0.14     lifecycle_0.1.0   tibble_2.1.3      gtable_0.3.0     
-## [13] pkgconfig_2.0.3   rlang_0.4.2       rstudioapi_0.10   yaml_2.2.0       
-## [17] xfun_0.11         xml2_1.2.2        httr_1.4.1        withr_2.1.2      
-## [21] stringr_1.4.0     dplyr_0.8.3       knitr_1.26        vctrs_0.2.1      
-## [25] hms_0.5.2         webshot_0.5.2     rprojroot_1.3-2   grid_3.6.2       
-## [29] tidyselect_0.2.5  glue_1.3.1        R6_2.4.1          rmarkdown_2.0    
-## [33] farver_2.0.1      purrr_0.3.3       readr_1.3.1       backports_1.1.5  
-## [37] scales_1.1.0      htmltools_0.4.0   rvest_0.3.5       assertthat_0.2.1 
-## [41] colorspace_1.4-1  labeling_0.3      stringi_1.4.3     lazyeval_0.2.2   
-## [45] munsell_0.5.0     crayon_1.3.4</code></pre>
+##  [1] Rcpp_1.0.2        highr_0.8         pillar_1.4.2     
+##  [4] compiler_3.6.1    tools_3.6.1       zeallot_0.1.0    
+##  [7] digest_0.6.21     viridisLite_0.3.0 evaluate_0.14    
+## [10] tibble_2.1.3      gtable_0.3.0      pkgconfig_2.0.3  
+## [13] rlang_0.4.0       rstudioapi_0.10   yaml_2.2.0       
+## [16] xfun_0.9          xml2_1.2.2        httr_1.4.1       
+## [19] withr_2.1.2       stringr_1.4.0     dplyr_0.8.3      
+## [22] knitr_1.25        vctrs_0.2.0       hms_0.5.1        
+## [25] webshot_0.5.1     rprojroot_1.3-2   grid_3.6.1       
+## [28] tidyselect_0.2.5  glue_1.3.1        R6_2.4.0         
+## [31] rmarkdown_1.15    purrr_0.3.3       readr_1.3.1      
+## [34] backports_1.1.4   scales_1.0.0      htmltools_0.3.6  
+## [37] rvest_0.3.4       assertthat_0.2.1  colorspace_1.4-1 
+## [40] labeling_0.3      stringi_1.4.3     lazyeval_0.2.2   
+## [43] munsell_0.5.0     crayon_1.3.4</code></pre>
 </div>
 
 

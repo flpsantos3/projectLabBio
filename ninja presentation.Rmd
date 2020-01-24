@@ -54,8 +54,8 @@ class: intro-slide
 
 ## Objective:
 
-* Explore **Liver and Intrahepatic Bile Ducts Cancer mortality** 
- 
+* Explore **Liver and Intrahepatic Bile Ducts Cancer mortality, geographical and time trends**
+
 ## Selected Countries:
 
 * **Austria**, **Cyprus**, **Germany**, **Malta**, **Portugal** and **European Union**
@@ -70,7 +70,7 @@ class: intro-slide
 ---
 class: third-slide, center, middle
 
-## Time trends in the mortality rates between countries for all age groups combined? 
+## Time trends in the mortality rates between countries for all age groups combined
 
 ```{r data, include=FALSE}
 library(here)
@@ -299,6 +299,7 @@ data.all %>%
     scale_y_continuous(sec.axis = dup_axis(breaks = c(-25,0,25,50,75)))
 ```
 
+* Even though Cyprus and Malta show the biggest increase between 2011 and 2016, that's not the case for the other years
 ---
 class: eighth-slide, middle
 
@@ -429,47 +430,47 @@ knitr::kable(allCM, format = "html", align="cccc") %>%
  * **Trachea/Bronchus/Lungs** is the **deadliest** by a large margin
  
  * Most **cancers increase** in number of deaths
+
+---
+class: tenth-slide, middle
+
+.center[
+## Mortality rate per sex over the years, for all age groups
+]
+```{r ggA2, echo=FALSE,  fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
+data.f$Sex <- as.factor(data.f$Sex)
+f <- data.f[mrate != "NA"][Age %in% "All"] %>%
+  ggplot(aes(Year, mrate, colour= Country, group = Country ))+
+  geom_line(size=1.3) +
+  theme(legend.position = "bottom")+
+  theme_dark() +
+  theme(plot.title = element_text(size=24, face = "bold", hjust = 0.5), 
+        legend.position = "bottom",
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size =14),
+        legend.text = element_text(size=12),
+        legend.title = element_text(size = 14),
+        axis.text.x = element_text(angle=45, vjust = 0.5))+
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))+
+  theme(strip.text = element_text(size = 18))
+
+f+transition_reveal(Year)+
+  facet_wrap(~Sex)
+```
  
 ---
-class: middle, conclusion-slide
+class: conclusion-slide, middle
 
 .center[
 ## Conclusions
 ]
 
-
- * Data shows an overall **slight increase in the mortality rate** for Liver and Intrahepatic Bile Ducts cancer (2011 to 2016).
+* Data shows an overall **slight increase in the mortality rate** for Liver and Intrahepatic Bile Ducts cancer (2011 to 2016).
  
- * Data also shows that this cancer is **more aggressive to older people**, showing higher mortality rates
+* Data also shows that this cancer is **more aggressive to older people**, showing higher mortality rates
  
- * **Most common cancers** are (almost) the **same** from 2011 to 2016.
+* **Most common cancers** are (almost) the **same** from 2011 to 2016.
  
- * **Lack of data for 2017** makes this analysis more difficult
+* **Lack of data for 2017** makes this analysis more difficult
  
- * Given the data limitations, the **true mortality rate might be higher**
-
----
-
-```{r ggA1, echo=FALSE}
-data.f$Year <- as.integer(data.f$Year)
-p <-data.f[mrate != "NA"] %>%
-  ggplot(aes(Age, mrate, group= Sex, colour= Sex))+
-    geom_point()+
-    facet_wrap(~Country)
-
-p +transition_time(Year)+
-  labs(title = "Year: {frame_time}")
-```
-
----
-
-```{r ggA2, echo=FALSE}
-data.f$Sex <- as.factor(data.f$Sex)
-f <- data.f[mrate != "NA"][Age %in% "All"] %>%
-      ggplot(aes(Year, mrate, colour= Country, group = Country ))+
-        geom_line()+
-        theme(legend.position = "bottom")
-
-f+transition_reveal(Year)+
-  facet_wrap(~Sex)
-```
+* Given the data limitations, the **true mortality rate might be higher**
