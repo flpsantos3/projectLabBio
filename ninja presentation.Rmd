@@ -47,7 +47,7 @@ class: intro-slide, left
 * Austria, Cyprus, Germany, Malta, Portugal and European Union
 
 .center[
-<img src="cancerpic2.png" alt="drawing" width="600" height="350"/> 
+<img src="bileductcancer.png" alt="drawing" width="600" height="350"/> 
 ]
 
 ### Image from: https://www.cancer.gov/publications/dictionaries/cancer-terms/def/intrahepatic-bile-duct
