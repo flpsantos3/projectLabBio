@@ -237,6 +237,7 @@ data.2016[Sex %in% "Males"][Age != "All"] %>%
 class: seventh-slide
 
 ## Changes in percentage terms between 2011 and 2016
+
 ```{r data.ex3, echo=FALSE, fig.align="center", warning=FALSE}
 # For the male population
 data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
@@ -264,47 +265,54 @@ all %>%
 # Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
 ```
 
-.pull-left[
+                        
 * *Female Population*: the country that changed the most was Cyprus with an increase of 29.9%
-]
 
-.pull-left[
 * *Male Population*: the country that changed the most was Malta with an increase of 71.5% 
-]
 
 ---
-class: eighth-slide 
+class: eighth-slide, center
 
-.pull-left[
-```{r female population.ex3, echo=FALSE, fig.align="center", warning=FALSE}
+## Changes in percentage terms between 2011 and 2016 
+
+```{r female population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
 # For the female population
 data.diff.F %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
-  geom_point()+
-  geom_line()+
+  geom_point(size=3) +
+  geom_line(size=1.5) +
   ggtitle("Mortalit rate when compared with 2011 for the Female popualtion")+
   ylab("Difference in %")+
-  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))+
+  theme_dark() +
+  theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
+        legend.position = "bottom",
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size =14),
+        legend.text = element_text(size=12),
+        legend.title = element_text(size = 14))
 ```
-]
 
-.pull-right[
-```{r Male population.ex3, echo=FALSE, fig.align="center", warning=FALSE}
+---
+class: ninth-slide, center
+
+## Changes in percentage terms between 2011 and 2016 
+```{r Male population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=6, warning=FALSE}
 # For the male population
 data.diff.M %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
-  geom_point()+
-  geom_line()+
+  geom_point(size=3) +
+  geom_line(size=1.5) +
   ylab("Difference in %")+
-  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
-
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3")) +
+  theme_dark() +
+  theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
+        legend.position = "bottom",
+        axis.title = element_text(size = 20),
+        axis.text = element_text(size =14),
+        legend.text = element_text(size=12),
+        legend.title = element_text(size = 14))
 ```
-]
-
----
-class: ninth-slide
-
-
 
 ---
 class: tenth-slide
@@ -400,7 +408,6 @@ cancersM11 <- cancersM[order(-Deaths), head(.SD,5)]
 kable(cancersM11, align = "rc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
-
 
 ```{r q4 males2016, include=FALSE, fig.align="center"}
 library(kableExtra)
