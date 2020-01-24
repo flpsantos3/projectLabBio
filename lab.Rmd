@@ -454,6 +454,9 @@ cancersM[order(-Deaths), head(.SD,5)] %>%
 
 For males, the most common cancers remained mostly the same between the years of 2011 and 2016, the only difference being the increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer, overtaking Stomach cancer as the fifth most deadly type of cancer. The most common cancer types for both years was Trachea/Bronchus/Lungs by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
 
+# *Conclusion*:
+
+
 ```{r sessionInfo, echo=TRUE}
 sessionInfo()
 ```
