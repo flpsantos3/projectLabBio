@@ -11,8 +11,16 @@
 * Practicing tidying datasets 
 * Learning how to work with Git and GitHub
 
+## The Data
+
+We will be using two data sets, given to us by Professors Saghir Bashir and Marília Antunes, containing the data for 28 European Union Countries:
+
++ `CancerMortalityEU.csv`- number of deaths by cancer type, country, year, age group and sex
+
++ `PopulationEU.csv`- number of people by country, year, age group and sex 
+
 ## Questions
-The countries we will be analysing are: Austria, Cyprus, Germany, Portugal, Malta and the European Union as one. For each question we will treat males and females separately.
+The countries we will be analysing are: `Austria, Cyprus, Germany, Portugal, Malta and the European Union`. For each question we will treat males and females separately.
 
 + What are the time trends in the mortality rates between countries for all age groups combines? How do they compare with the European Union overall?
 
