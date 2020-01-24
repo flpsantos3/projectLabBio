@@ -2,7 +2,7 @@
 * Liver and Intrahepatic Bile Ducts Cancer in European Countries. 
 
 <div>
-<img src="preview.png">
+<img src="preview2.png">
 </div>
 
 ## Objectives
@@ -24,6 +24,7 @@ The countries we will be analysing are: Austria, Cyprus, Germany, Portugal, Malt
 
 ## Acknowledgements
 
+We would like to thank Professors Saghir Bashir and Marília Antunes for their availability to answer all our doubts and questions and for everything we learned from them this semester. A special thanks to everyone who shares their knowledge in coding online since it was very helpful for us to do some parts of this assessment, specially the presentation using the xaringan package. 
 
 
 
