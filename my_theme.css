@@ -16,6 +16,13 @@
   background-color: navy;
 }
 
+.remark-slide-content {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+}
+
 .title-slide {
 	background-image: url("background1.png");
   background-size: cover; 
@@ -100,6 +107,24 @@
 	background-size: cover;
 	font-style: normal;
   font-family: arial;
+}
+
+.intro-slide h1 {
+ text-align: left;
+ font-family: arial;
+ font-weight: bold;
+ font-size: 30pt;
+ color: black;
+ margin-left: 20px;
+}
+
+.intro-slide h2 {
+ text-align: left;
+ font-family: arial;
+ font-weight: bold;
+ font-size: 25pt;
+ color: black;
+ margin-left: 20px;
 }
 
 .intro-slide h3 {

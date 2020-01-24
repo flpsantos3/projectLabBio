@@ -39,7 +39,7 @@ class: title-slide
 #### University of Lisbon, Faculty of Sciences 
 ##### Laboratory of Biostatistics 2019/2020
 ---
-class: intro-slide, left
+class: intro-slide
 
 # Introduction 
 
@@ -138,58 +138,29 @@ data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Count
 data.f
 ```
 
-```{r q1 females, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
-data.f[Age %in% "All"][Sex %in% "Females"] %>% 
+```{r q1 females&males, echo=FALSE, fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
+data.f[Age %in% "All"] %>% 
   ggplot(aes(Year,mrate, group=Country, colour = Country)) +
-    geom_point(size=3) +
-    geom_line(size=1.3) +
-    ylab("Mortality Rate") +
-    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
-    ggtitle("Female population")+
-    theme_dark() +
-    theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
-          legend.position = "bottom",
-          axis.title = element_text(size = 20),
-          axis.text = element_text(size =14),
-          legend.text = element_text(size=12),
-          legend.title = element_text(size = 14))+
-    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
-```
-
-* Overall **increasing trend** for every country
-
-* **Malta, Austria and Cyprus** display the most **irregular** trends
-
-
----
-class: fourth-slide, center
-
-## Time trends in the mortality rates between countries for all age groups combined? 
-
-```{r q1 males, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
-data.f[Age %in% "All"][Sex %in% "Males"] %>%  
-  ggplot(aes(Year,mrate, group=Country, colour = Country))+
   geom_point(size=3) +
   geom_line(size=1.3) +
   ylab("Mortality Rate") +
   scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
-  ggtitle("Male population")+
   theme_dark() +
-  theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
+  theme(plot.title = element_text(size=24, face = "bold", hjust = 0.5), 
         legend.position = "bottom",
         axis.title = element_text(size = 20),
         axis.text = element_text(size =14),
         legend.text = element_text(size=12),
         legend.title = element_text(size = 14))+
-  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))+
+  theme(strip.text = element_text(size = 18))+
+  facet_wrap(~Sex)
 ```
 
-* Overall **increasing** trend for every country
-
-* Overall values for mortality are **higher than** those of **females**.
+* Overall **increasing trend** for every country & values for mortality for men are **higher than** those of **females**.
 
 ---
-class: fifth-slide, center
+class: fourth-slide, center
 
 ## Mortality rates by age groups between countries in 2016
 
@@ -200,7 +171,7 @@ levels(data.2016$Age)
 data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 ```
 
-```{r q2 females, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
+```{r q2 females, echo=FALSE, fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
 data.2016[Sex %in% "Females"][Age != "All"] %>%
 ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_point(size=3)+
@@ -218,15 +189,13 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
-* The **first age groups** show very **low mortality** rate
-
-* **Older population** is **more susceptible** to die due to this kind of cancer 
+* The **first age groups** show very **low mortality** rate & **Older population** is **more susceptible** to die due to this kind of cancer 
 
 ---
-class: sixth-slide, center
+class: fifth-slide, center
 ## Mortality rates by age groups between countries in 2016
 
-```{r q2 males, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
+```{r q2 males, echo=FALSE, fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
 data.2016[Sex %in% "Males"][Age != "All"] %>%
   ggplot(aes(Age,mrate, group=Country, colour=Country))+
   geom_point(size=3)+
@@ -245,14 +214,14 @@ data.2016[Sex %in% "Males"][Age != "All"] %>%
   scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
-* Mortality rate is **higher for the Male population** than for Female population
-
-* **Older population** is more **susceptible** to die due to this kind of cancer
+* Mortality rate is **higher for the Male population** & **Older population** is more **susceptible** to die due to this kind of cancer
 
 ---
-class: seventh-slide
+class: sixth-slide
 
+.center[
 ## Changes in percentage terms between 2011 and 2016
+] 
 
 ```{r data.ex3, echo=FALSE, fig.align="center", message=FALSE, warning=FALSE}
 # For the male population
@@ -287,58 +256,37 @@ all %>%
 * *Male Population*: the country that changed the most was **Malta** with an **increase of 71.5%**
 
 ---
-class: eighth-slide, center
+class: seventh-slide, center
 
 ## Changes in percentage terms between 2011 and 2016 
 
-```{r female population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
+```{r female population.ex3, echo=FALSE, fig.align="center", fig.width=11, fig.height=6, warning=FALSE}
 # For the female population
-data.diff.F %>%
+data.all <- rbind(data.diff.F, data.diff.M)
+data.all %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
-  geom_point(size=3) +
-  geom_line(size=1.3) +
-  ggtitle("Female Population")+
-  ylab("Difference in %")+
-  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))+
-  theme_dark() +
-  theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
+  geom_point(size=3)+
+  geom_line(size=1.3)+
+    ylab("Difference in %")+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))+
+   theme_dark()+
+   theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
         legend.position = "bottom",
         axis.title = element_text(size = 20),
         axis.text = element_text(size =14),
         legend.text = element_text(size=12),
-        legend.title = element_text(size = 14))
+        legend.title = element_text(size = 14), 
+        axis.text.x = element_text(angle=45, vjust = 0.5))+
+    theme(strip.text = element_text(size = 18))+
+    facet_wrap(~Sex)
 ```
 
- * **Portugal, European Union and Germany** display **stable** values along the years
- 
- * **Cyprus, Austria and Malta** show a very **irregular trend** throughout the years
-
----
-class: ninth-slide, center
-
-## Changes in percentage terms between 2011 and 2016 
-```{r Male population.ex3, echo=FALSE, fig.align="center", fig.width=10, fig.height=5, warning=FALSE}
-# For the male population
-data.diff.M %>%
-  ggplot(aes(Year, per, group=Country, colour =Country))+
-  geom_point(size=3) +
-  geom_line(size=1.5) +
-  ylab("Difference in %")+
-  ggtitle("Male Population")+
-  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3")) +
-  theme_dark() +
-  theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
-        legend.position = "bottom",
-        axis.title = element_text(size = 20),
-        axis.text = element_text(size =14),
-        legend.text = element_text(size=12),
-        legend.title = element_text(size = 14))
-```
+ * **Portugal, European Union and Germany** display **stable** values along the years & **Cyprus, Austria and Malta** show a very **irregular trend** throughout the years
 
  * A general **stabilization** across the years **except for Malta** (Which has a **75% increase** in the mortality rate, from 2011 to 2016)
 
 ---
-class: tenth-slide
+class: eighth-slide
 ## Most common cancers for Females in 2011 and 2016
 
 ```{r data.ex4, include=FALSE}
@@ -421,7 +369,7 @@ knitr::kable(allCF, format = "html", align="cccc") %>%
  * **Decreases:** Colon and Ovary
  
 ---
-class: eleventh-slide
+class: ninth-slide
 
 ## Most common cancers for Males in 2011 and 2016
 ```{r q4 males2011, include=FALSE, fig.align="center"}
