@@ -474,7 +474,7 @@ For males, the most common cancers remained mostly the same between the years of
 
 # *Conclusion*:
 
-  * In conclusion, this data shows a general stabilization in the mortality rate from cancer in the Liver and Intrahepatic Bile Ducts (from 2011      to 2016). 2017 is lot more dificult to see given we have a lot of missing data
+  * In conclusion, this data shows a general stabilization in the mortality rate from cancer in the Liver and Intrahepatic Bile Ducts (from 2011 to 2016). 2017 is a lot more difficult to see given we have a lot of missing data.
 
   * The data also shows that this cancer is more agressive to older people, whit higher mortality rates
   
