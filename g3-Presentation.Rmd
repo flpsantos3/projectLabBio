@@ -299,7 +299,7 @@ data.all %>%
     scale_y_continuous(sec.axis = dup_axis(breaks = c(-25,0,25,50,75)))
 ```
 
-* Even though Cyprus and Malta show the biggest increase between 2011 and 2016, that's not the case for the other years
+* Even though **Cyprus** and **Malta** show the **biggest increase** between **2011** and **2016**, that's **not the case for the other years**
 ---
 class: eighth-slide, middle
 
