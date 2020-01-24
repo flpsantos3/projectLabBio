@@ -1,6 +1,6 @@
 ---
 title: "Laboratory of Biostatistics Assessment"
-author: "Group nº3 - Carolina Santos, Filipe Santos & Hugo Anjos"
+author: "Group nº3 - Carolina Santos nº49286, Filipe Santos nº55142 & Hugo Anjos nº49209"
 date: "28 de Dezembro de 2019"
 output:
   html_document:
