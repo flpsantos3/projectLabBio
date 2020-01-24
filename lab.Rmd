@@ -17,11 +17,11 @@ output:
 ---
 
 ```{r dtStart, include=FALSE}
-knitr::opts_chunk$set(out.width = "100%", echo = TRUE)
-packages <- c("ggplot2", "here", "data.table", "unglue", "magrittr", "kableExtra")
+packages <- c("ggplot2", "here", "data.table", "unglue", "magrittr", "kableExtra", "knitr")
 if (length(setdiff(packages, rownames(installed.packages()))) > 0) {
   install.packages(setdiff(packages, rownames(installed.packages())))
 }
+knitr::opts_chunk$set(out.width = "100%", echo = TRUE)
 
 library(here)
 library(data.table)
@@ -474,6 +474,11 @@ For males, the most common cancers remained mostly the same between the years of
 
 # *Conclusion*:
 
+  * In conclusion, this data shows a general stabilization in the mortality rate from cancer in the Liver and Intrahepatic Bile Ducts (from 2011      to 2016). 2017 is lot more dificult to see given we have a lot of missing data
+
+  * The data also shows that this cancer is more agressive to older people, whit higher mortality rates
+  
+  * Given the data limitations, the true mortality rate may be higher
 
 ```{r sessionInfo, echo=TRUE}
 sessionInfo()
