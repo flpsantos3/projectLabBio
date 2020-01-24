@@ -152,7 +152,8 @@ data.f[Age %in% "All"][Sex %in% "Females"] %>%
           axis.title = element_text(size = 20),
           axis.text = element_text(size =14),
           legend.text = element_text(size=12),
-          legend.title = element_text(size = 14))
+          legend.title = element_text(size = 14))+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
 ---
@@ -175,7 +176,8 @@ data.f[Age %in% "All"][Sex %in% "Males"] %>%
         axis.title = element_text(size = 20),
         axis.text = element_text(size =14),
         legend.text = element_text(size=12),
-        legend.title = element_text(size = 14))
+        legend.title = element_text(size = 14))+
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
 ---
@@ -204,7 +206,8 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
           axis.text = element_text(size =14),
           legend.text = element_text(size=12),
           legend.title = element_text(size = 14), 
-          axis.text.x = element_text(angle=45, vjust = 0.5))
+          axis.text.x = element_text(angle=45, vjust = 0.5))+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
 ---
@@ -226,7 +229,8 @@ data.2016[Sex %in% "Males"][Age != "All"] %>%
         axis.text = element_text(size =14),
         legend.text = element_text(size=12),
         legend.title = element_text(size = 14), 
-        axis.text.x = element_text(angle=45, vjust = 0.5))
+        axis.text.x = element_text(angle=45, vjust = 0.5))+
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
 
@@ -243,64 +247,56 @@ diff.Males <- dcast(diff.M, Year ~ Country, value.var = "DiffCountry" )
 # For the female population
 
 data.diff.F <- data.f[Year != 2017][Year != 2011 & Sex %in% "Females" & Age %in% "All"]
-data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Males" & Age %in% "All"]$mrate*100)]
+data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate*100)]
 diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%%", per)][, .(Country, Year, DiffCountry)]
 diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
 ```
 
-```{r female population.ex3, echo=FALSE, fig.align="center", warning=FALSE}
+```{r fig.align="center", message=FALSE, warning=FALSE, , echo=FALSE}
 library(kableExtra)
+# This one maybe for the slides
+all <- rbind(diff.Females[Year %in% "2016"],diff.Males[Year %in% "2016"])
+all %>%
+  kable(align = "cccccc") %>%
+  kable_styling() %>%
+  pack_rows("Female Population", 1, 1) %>%
+  pack_rows("Male population" , 2, 2) %>%
+  column_spec(1, bold = T)
+# Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
+```
+---
+class: eighth-slide 
+
+.pull-left[
+```{r female population.ex3, echo=FALSE, fig.align="center", warning=FALSE}
 # For the female population
 data.diff.F %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
   geom_point()+
   geom_line()+
   ggtitle("Mortalit rate when compared with 2011 for the Female popualtion")+
-  ylab("Difference in %")
-
-# For the Female population
-diff.Females %>%
-  kable(align="ccccc") %>% 
-  kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  column_spec(1, bold = T)
+  ylab("Difference in %")+
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
+]
 
----
-class: eighth-slide 
-
+.pull-right[
 ```{r Male population.ex3, echo=FALSE, fig.align="center", warning=FALSE}
-# For the male population
-
-diff.Males %>%
-  kable(align="ccccc") %>% 
-  kable_styling(bootstrap_options = c("striped", "hover")) %>%
-  column_spec(1, bold = T)
-
 # For the male population
 data.diff.M %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
   geom_point()+
   geom_line()+
-  ylab("Difference in %")
+  ylab("Difference in %")+
+  scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 
 ```
+]
 
 ---
 class: ninth-slide
 
-```{r  , echo=FALSE, fig.align="center", warning=FALSE}
-# This one maybe for the slides
-all <- rbind(diff.Females,diff.Males)
-all %>%
-  kable(align = "cccccc") %>%
-  kable_styling() %>%
-  pack_rows("Female Population", 1, 5) %>%
-  pack_rows("Male population" , 6, 10) %>%
-  column_spec(1, bold = T)
-# Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
-```
 
-- Podiamos fazer as duas em separado ou as duas juntas. O que acham? Apaguem o que não quiserem
 
 ---
 class: tenth-slide

@@ -271,13 +271,26 @@ allCancer
 >How do they compare with the European Union overall?
 
 ```{r Time trends for females}
+p <- data.f[Age %in% "All"][Sex %in% "Females"][Country != "Germany"] %>% 
+ggplot(aes(Year,mrate, group=Country, colour = Country)) +
+    geom_point(size=2) +
+    geom_line() +
+    ggtitle("Time trends of Liver Cancer on the Female population") +
+    ylab("Mortality Rate") +
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
+    geom_point(data = data.f[Age %in% "All"][Sex %in% "Females"][Country %in% "Germany"], aes(Year, mrate, group= Country), colour = "yellow")+
+    geom_line(data = data.f[Age %in% "All"][Sex %in% "Females"][Country %in% "Germany"], aes(Year, mrate, group= Country), colour = "yellow")
+
+ggplot_build(p)$data
+
 data.f[Age %in% "All"][Sex %in% "Females"] %>% 
 ggplot(aes(Year,mrate, group=Country, colour = Country)) +
     geom_point(size=2) +
     geom_line() +
     ggtitle("Time trends of Liver Cancer on the Female population") +
     ylab("Mortality Rate") +
-    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
   
 ## *Interpretation*
@@ -297,7 +310,8 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
     geom_line()+
     ggtitle("Time trends of Liver Cancer on the Male population")+
     ylab("Mortality Rate") +
-    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])
+    scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
 ## *Interpretation*
@@ -321,7 +335,8 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_line()+
     theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
     ggtitle("Mortlity rate per Age group in 2016 for the Female population")+
-    ylab("Mortality Rate")
+    ylab("Mortality Rate")+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
 ## *Interpretation*
@@ -342,7 +357,8 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
     ggtitle("Mortlity rate per Age group in 2016 for the Male population")+
     ylab("Mortality Rate") +
-    scale_x_discrete(labels=data.f[,Age], breaks = data.f[,Age])
+    scale_x_discrete(labels=data.f[,Age], breaks = data.f[,Age])+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
 ## *Interpretation*
@@ -370,7 +386,8 @@ data.diff.F %>%
     geom_point()+
     geom_line()+
     ggtitle("Mortality rate when compared with 2011 for the Female population")+
-    ylab("Difference in %")
+    ylab("Difference in %")+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 
 # For the Female population
 diff.Females %>%
@@ -397,7 +414,8 @@ data.diff.M %>%
   ggplot(aes(Year, per, group=Country, colour =Country))+
     geom_point()+
     geom_line()+
-    ylab("Difference in %")
+    ylab("Difference in %")+
+    scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 
 ```
 
