@@ -145,7 +145,7 @@ data.f[Age %in% "All"][Sex %in% "Females"] %>%
     geom_line(size=1.5) +
     ylab("Mortality Rate") +
     scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
-    ggtitle("For the Female population")+
+    ggtitle("Female population")+
     theme_dark() +
     theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
           legend.position = "bottom",
@@ -169,7 +169,7 @@ data.f[Age %in% "All"][Sex %in% "Males"] %>%
   ggtitle("Time trends of Liver Cancer on the Male population")+
   ylab("Mortality Rate") +
   scale_x_continuous(labels=data.f[,Year], breaks = data.f[,Year])+
-  ggtitle("For the Male population")+
+  ggtitle("Male population")+
   theme_dark() +
   theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
         legend.position = "bottom",
@@ -197,7 +197,7 @@ data.2016[Sex %in% "Females"][Age != "All"] %>%
 ggplot(aes(Age,mrate, group=Country, colour=Country))+
     geom_point(size=3)+
     geom_line(size=1.3)+
-    ggtitle("Mortlity rate per Age group in 2016 on the Female population")+
+    ggtitle("Female population")+
     ylab("Mortality Rate")+
     theme_dark()+
     theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
@@ -220,7 +220,7 @@ data.2016[Sex %in% "Males"][Age != "All"] %>%
   geom_point(size=3)+
   geom_line(size=1.3)+
   theme(axis.text.x = element_text(angle=45, vjust = 0.5))+
-  ggtitle("For the Male population")+
+  ggtitle("Male population")+
   ylab("Mortality Rate") +
   theme_dark()+
   theme(plot.title = element_text(size=22, face = "bold", hjust = 0.5), 
@@ -233,10 +233,10 @@ data.2016[Sex %in% "Males"][Age != "All"] %>%
   scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
-
 ---
 class: seventh-slide
 
+## Changes in percentage terms between 2011 and 2016
 ```{r data.ex3, echo=FALSE, fig.align="center", warning=FALSE}
 # For the male population
 data.diff.M <- data.f[Year != 2017][Year != 2011 & Sex %in% "Males" & Age %in% "All"]
@@ -245,16 +245,15 @@ diff.M <- data.diff.M[, DiffCountry := sprintf("%3.1f%%", per)][, .(Country, Yea
 diff.Males <- dcast(diff.M, Year ~ Country, value.var = "DiffCountry" )
 
 # For the female population
-
 data.diff.F <- data.f[Year != 2017][Year != 2011 & Sex %in% "Females" & Age %in% "All"]
 data.diff.F[,per := ((data.diff.F$mrate - data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate )/data.f[Year %in% 2011 & Sex %in% "Females" & Age %in% "All"]$mrate*100)]
 diff.F <- data.diff.F[, DiffCountry := sprintf("%3.1f%%", per)][, .(Country, Year, DiffCountry)]
 diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
 ```
 
-```{r fig.align="center", message=FALSE, warning=FALSE, , echo=FALSE}
+
+```{r , echo=FALSE, fig.align="center", message=FALSE, warning=FALSE}
 library(kableExtra)
-# This one maybe for the slides
 all <- rbind(diff.Females[Year %in% "2016"],diff.Males[Year %in% "2016"])
 all %>%
   kable(align = "cccccc") %>%
@@ -264,6 +263,15 @@ all %>%
   column_spec(1, bold = T)
 # Com base nas contas, se a percentagem aumenta é porque o mrate aumentou nesse ano
 ```
+
+.pull-left[
+* *Female Population*: the country that changed the most was Cyprus with an increase of 29.9%
+]
+
+.pull-left[
+* *Male Population*: the country that changed the most was Malta with an increase of 71.5% 
+]
+
 ---
 class: eighth-slide 
 
