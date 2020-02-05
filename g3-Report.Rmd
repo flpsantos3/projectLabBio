@@ -7,13 +7,13 @@ output:
     highlight: tango
     theme: united
     toc: yes
-    toc_depth: 3
+    toc_depth: 2
     toc_float:
       collapsed: no
       smooth_scroll: no
   pdf_document:
     toc: yes
-    toc_depth: '3'
+    toc_depth: '2'
 ---
 
 ```{r dtStart, include=FALSE}
@@ -31,9 +31,9 @@ library(magrittr)
 library(kableExtra)
 ```
 
-# *Objectives*
+# Objectives
 
-The main objective is to *explore Liver and Intrahepatic Bile Ducts Cancer mortality geographical and time trends* for the following countries:
+The main objective is to **explore Liver and Intrahepatic Bile Ducts Cancer mortality geographical and time trends** for the following countries:
 
 + `Austria`
 
@@ -47,7 +47,7 @@ The main objective is to *explore Liver and Intrahepatic Bile Ducts Cancer morta
 
 + `European Union`
 
-To do so, we will answer the following questions, always *treating males and females separately*:
+To do so, we will answer the following questions, always **treating males and females separately**:
 
 + What are the time trends in the mortality rates between countries for all age groups combines? How do they compare with the European Union overall?
 
@@ -57,13 +57,14 @@ To do so, we will answer the following questions, always *treating males and fem
 
 + What are the five most common cancer in 2011 and in 2017?
 
-# *Reading the Data*
+# Reading the Data
+
 ```{r readind data}
 data <- fread(here("CancerMortalityEU.csv"), header = TRUE, check.names = TRUE)
 popdt <- fread("PopulationEU.csv", header = TRUE, check.names=TRUE)
 ```
 
-# *Data Limitations*
+# Data Limitations
 
 By taking a quick look at the data sets we can observe that there is some missing data for some countries and for the year 2017, in specific, there is no data regarding the cancer for the countries of Portugal and Malta.
 
@@ -75,8 +76,9 @@ Also, there are some inherent limitations to the data in the sense that, the cha
 
 Differences between countries might bue due to these limitations.
 
-# *Data Tidying* 
-## `Cancer Data`:
+# Data Tidying
+
+## Cancer Data:
 
 ```{r cancerData, results= FALSE}
 # Removing unnecessary columns
@@ -125,7 +127,7 @@ cancer.liver
 ```
 
 
-## `Population Data`:
+## Population Data:
 
 ```{r dtPop, results= FALSE, warning=FALSE}
 # Importing data
@@ -182,7 +184,7 @@ popF <- popF[order(Year, Country)]
 popF
 ```
 
-## `Merging the two data sets`:
+## Merging the two data sets:
 
 ```{r final data set, results=FALSE}
 data.f <- cancer.liver[popF, on=c("Country","Age","Sex","Year")]
@@ -191,7 +193,7 @@ data.f[Age %in% "All"][Sex %in% "Females"][, sum(Deaths, na.rm = TRUE), by=Count
 data.f
 ```
 
-## `Preparing the Data for the second question`:
+## Preparing the Data for the second question:
 
 ```{r data.ex2, results=FALSE}
 data.2016 <- data.f[Year %in% "2016"][Deaths != "NA"]
@@ -200,7 +202,7 @@ levels(data.2016$Age)
 data.2016$Age <- factor(data.2016$Age, levels(data.2016$Age)[c(1,10,2:9,11:19)])
 ```
 
-## `Preparing the data for the third question`:
+## Preparing the data for the third question:
 
 ```{r dataEx3, results=FALSE}
 # For the male population
@@ -218,7 +220,7 @@ diff.Females <- dcast(diff.F, Year ~ Country, value.var = "DiffCountry" )
 
 ```
 
-## `Preparing the data for the fourth question`:
+## Preparing the data for the fourth question:
 
 ```{r allCancerSites, results=FALSE}
 # Reading all cancer data
@@ -262,9 +264,9 @@ allCancer <- allCancer[CancerSite != "All Cancers"]
 allCancer
 ```
 
+# Questions
 
-# *Questions*
-## `First Question`
+## First Question
 
 > What are the time trends in the mortality rates between countries for all age groups (“All”) combined?
 
@@ -293,7 +295,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country)) +
     scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
   
-## *Interpretation*
+### Interpretation
 
   * There is an overall increasing trend for every country, as well as for the European Union.
   * Malta, Austria and Cyprus display the most irregular trends, probably explained by the lack of values for some of the ages in these countries.
@@ -314,7 +316,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
     scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
-## *Interpretation*
+### Interpretation
 
   * For males, like females, there is an increase in hepatic liver mortality rate over the years.
     + An exception is Germany, showing stable values for the years 2011 and 2017.
@@ -324,7 +326,7 @@ ggplot(aes(Year,mrate, group=Country, colour = Country))+
   * Portugal and Austria display higher values than the European Union, while the remaining countries stay below the average.
 
 
-## `Second Question`
+## Second Question
 
 > Compare the mortality rates by age groups between countries for 2017.
 
@@ -339,7 +341,7 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
-## *Interpretation*
+### Interpretation
 
   * In every country (except in Malta which is a lot harder to describe) we see a general increase on the mortality rate as the age class increases (starting in the 35 to 39 age class)
   * Contrary to the other countries (which always increase), Malta's mortality rate oscilates a lot between the classes 55-60 and 85, where it ends with a 0 mortality rate
@@ -361,7 +363,7 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     scale_colour_manual(labels = c("Austria", "Cyprus", "European Union", "Germany", "Malta", "Portugal"), values = c("#F8766D", "#B79F00", "#00BA38", "yellow", "#619CFF", "#F564E3"))
 ```
 
-## *Interpretation*
+### Interpretation
 
   * Again, in every country we see a general increase on the mortality rate as the age class increases (starting in the 40 to 44 age class)
   * Contrary to the general trend, we see a decrease in Malta between the age classes of 50-54 and 65-69m as well as with Cyprus between 55-59 and 60-64, 60-64 and 70-74 (which stabilizes) and 80-84 and 85 where it drop to 21.72
@@ -372,7 +374,7 @@ ggplot(aes(Age,mrate, group=Country, colour=Country))+
     + On the other hand, Malta only shows a mortality rate lower than the European Union in the age classes of 60-64 and 65-69
   * In general, the mortality rate for this type of cancer is higher in the Male population than on the Female population, for the countries chosen for analysis
 
-## `Third Question`
+## Third Question
 
 > Which country changed (increase or decreased) the most in percentage terms between 2011 and 2016?
 
@@ -396,7 +398,7 @@ diff.Females %>%
   column_spec(1, bold = T)
 ```
 
-### *Interpretation*
+### Interpretation
 
 The country that changed the most in mortality rate for the Female population, from 2011 to 2016, was Cyprus with an increase of 29.9%
 
@@ -419,60 +421,215 @@ data.diff.M %>%
 
 ```
 
-### *Interpretation*
+### Interpretation
 
 The country that changed the most in mortality rate for the Male population, from 2011 to 2016, was Malta with an increase of 71.5% 
 
-## `Fourth Question`
+## Fourth Question
 
-> What are the five (5) most common cancers in 2011? in 2016 for your countries?
+> What are the five (5) most common causes of death by cancer in 2011? in 2016 for each of your countries?
 
 ```{r cancersF11}
 #Selecting cancer data for 2011
-cancersF <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]
-cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersF[order(-Deaths), head(.SD,5)]%>%
+cancersF11 <- allCancer[Sex=="Females"][Year=="2011"][Age=="All"][order(CancerSite)]
+cancersF11 <- cancersF11[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, CancerSite)]
+fCancersEU11 <- cancersF11[Country=="European Union"]
+fCancersEU11[order(-Deaths), head(.SD,5)]%>%
   kable(align = "cc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
+
+```{r cancersFPT11}
+fCancersPT11 <- cancersF11[Country=="Portugal"]
+fCancersPT11[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r cancersFGE11}
+fCancersGE11 <- cancersF11[Country=="Germany"]
+fCancersGE11[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r cancersFAU11}
+fCancersAU11 <- cancersF11[Country=="Austria"]
+fCancersAU11[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r cancersFMA11}
+fCancersMA11 <- cancersF11[Country=="Malta"]
+fCancersMA11[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r cancersFCY11}
+fCancersCY11 <- cancersF11[Country=="Cyprus"]
+fCancersCY11[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+### Interpretation
+
+In general, the most causes of death by cancer, for females in 2011, are Breast, Trachea/Bronchus/Lung and Colon cancers. There is, however, quite a large variation between countries, with the most notable being Malta, where Respiratory Tract cancers are the 5th most deadly (while in most other countries it occupies the top two positions) and Portugal, here Colon cancer is the most common and Trachea/Bronchus/Lung cancers is on the bottom of the table. Other cancer types that appear are Stomach, Ovary and Pancreas.
 
 ```{r cancersF16}
 #Selecting cancer data for 2016
-cancersF <- allCancer[Sex=="Females"][Year=="2016"][Age=="All"][order(CancerSite)]
-cancersF <- cancersF[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersF[order(-Deaths), head(.SD,5)]%>%
+cancersF16 <- allCancer[Sex=="Females"][Year=="2016"][Age=="All"][order(CancerSite)]
+cancersF16 <- cancersF16[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, CancerSite)]
+fCancersEU16 <- cancersF16[Country=="European Union"]
+fCancersEU16[order(-Deaths), head(.SD,5)]%>%
   kable(align = "cc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
 
-## *Interpretation*
+```{r cancersFPT16}
+fCancersPT16 <- cancersF16[Country=="Portugal"]
+fCancersPT16[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
 
-For the countries chosen (Austria, Cyprus, Germany, Malta, Portugal and the European Union), the **5 most common cancer types were the same in 2011 and 2016: Breast, Trachea/Bronchus/Lung, Colon, Pancreas and Ovary**. There is a slight increase in the number of deaths for Breast, Trachea/Bronchus/Lung and Pancreas cancers (Pancreas showing the largest increase), while the mortality for Colon and Ovary shows a slight decrease.
+```{r cancersFGE16}
+fCancersGE16 <- cancersF16[Country=="Germany"]
+fCancersGE16[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
 
+```{r cancersFAU16}
+fCancersAU16 <- cancersF16[Country=="Austria"]
+fCancersAU16[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
 
-```{r cancersM11}
+```{r cancersFMA16}
+fCancersMA16 <- cancersF16[Country=="Malta"]
+fCancersMA16[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r cancersFCY16}
+fCancersCY16 <- cancersF16[Country=="Cyprus"]
+fCancersCY16[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+### Interpretation
+
+The data for the most common causes of death by cancer for females in 2016 is much more homogenous than in 2011. The top three cancers are always Breast, Trachea/Bronchus/Lung and Colon cancers (Colon cancer is more deadly than the Respiratory Tract cancers only in Portugal and Malta). The fourth and fifth most common causes of death by cancer are Pancreas and Ovary for most countries, the only exception being Portugal where those positions are occupied by Stomach and Pancreas cancers, respectively.
+
+```{r cancersMEU11}
 #Selecting cancer data for 2011
-cancersM <- allCancer[Sex=="Males"][Year=="2011"][Age=="All"][order(CancerSite)]
-cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersM[order(-Deaths), head(.SD,5)]%>%
+cancersM11 <- allCancer[Sex=="Males"][Year=="2011"][Age=="All"][order(CancerSite)]
+cancersM11 <- cancersM11[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, CancerSite)]
+mCancersEU <- cancersM11[Country=="European Union"]
+mCancersEU[order(-Deaths), head(.SD,5)]%>%
   kable(align = "cc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
 
-```{r cancersM16}
+```{r cancersMPT11}
+mCancersPT <- cancersM11[Country=="Portugal"]
+mCancersPT[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+
+```{r cancersMGE11}
+mCancersGE <- cancersM11[Country=="Germany"]
+mCancersGE[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+
+```{r cancersMAU11}
+mCancersAU <- cancersM11[Country=="Austria"]
+mCancersAU[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+
+```{r cancersMMA11}
+mCancersMA <- cancersM11[Country=="Malta"]
+mCancersMA[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+
+```{r cancersMCY11}
+mCancersCY <- cancersM11[Country=="Cyprus"]
+mCancersCY[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+### Interpretation
+
+For 2011, the most common causes of death by cancer, for males, are generally the same between countries, with Trachea/Bronchus/Lung cancer being the most common for all countries, followed by Colon and Prostate (except Cyprus where Prostate cancer caused more deaths than Colon). The last two positions of the table are occupied by Stomach, Pancreas, Liver or Bladder cancers.
+
+```{r cancersMEU16}
 #Selecting cancer data for 2016
-cancersM <- allCancer[Sex=="Males"][Year=="2016"][Age=="All"][order(CancerSite)]
-cancersM <- cancersM[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(CancerSite)]
-cancersM[order(-Deaths), head(.SD,5)] %>%
+cancersM16 <- allCancer[Sex=="Males"][Year=="2016"][Age=="All"][order(CancerSite)]
+cancersM16 <- cancersM16[, .(Deaths = sum(Deaths, na.rm = TRUE)), by = .(Country, CancerSite)]
+mCancersEU <- cancersM16[Country=="European Union"]
+mCancersEU[order(-Deaths), head(.SD,5)]%>%
   kable(align = "cc")%>% 
   kable_styling(bootstrap_options = "striped")
 ```
 
-## *Interpretation*
+```{r cancersMPT16}
+mCancersPT <- cancersM16[Country=="Portugal"]
+mCancersPT[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
 
-For males, the **most common cancers remained mostly the same** between the years of 2011 and 2016, the only difference being the **increase in deaths caused by Liver and Intrahepatic Bile Ducts cancer**, overtaking Stomach cancer as the fifth most deadly type of cancer. The **most common cancer** cause of death for both years was **Trachea/Bronchus/Lungs** by a large margin. However, it is the only cancer type that shows a decrease in numbers from 2011 to 2016. The remaining cancer types show an increase in the number of deaths, with Pancreas cancer displaying the largest.
+```{r cancersMGE16}
+mCancersGE <- cancersM16[Country=="Germany"]
+mCancersGE[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
 
-# *Conclusions*:
+```{r cancersMAU16}
+mCancersAU <- cancersM16[Country=="Austria"]
+mCancersAU[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r cancersMMA16}
+mCancersMA <- cancersM16[Country=="Malta"]
+mCancersMA[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+```{r cancersMCY16}
+mCancersCY <- cancersM16[Country=="Cyprus"]
+mCancersCY[order(-Deaths), head(.SD,5)]%>%
+  kable(align = "cc")%>% 
+  kable_styling(bootstrap_options = "striped")
+```
+
+### Interpretation
+
+In 2016 the top three most common death causes by cancer are the same as 2011: Trachea/Bronchus/Lung, Prostate and Colon. However, there is an increase in the number of deaths for Prostate cancer (compared to Colon cancer) that caused this cancer to be the second most deadly in most countries considered. The last positions are, again, occupied by Pancreas, Liver, Bladder or Stomach cancer.
+
+# Conclusions:
 
  * This data shows an **overall slight increase in the mortality rate for Liver and Intrahepatic Bile Ducts cancer** (from 2011 to 2016)
   
